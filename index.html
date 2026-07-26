@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Designs by Salz — Sports Graphic Designer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23000'/%3E%3Ctext x='32' y='44' font-family='Arial Black,Arial' font-size='30' font-style='italic' font-weight='900' fill='%233fe1d0' text-anchor='middle'%3EJS%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --mint: #3fe1d0;
+    --mint-12: rgba(63,225,208,0.12);
+    --mint-20: rgba(63,225,208,0.20);
+    --mint-45: rgba(63,225,208,0.45);
+    --black: #000000;
+    --white: #ffffff;
+    --w-60: rgba(255,255,255,0.6);
+    --w-40: rgba(255,255,255,0.4);
+    --head: "Avenir Next Condensed", "Helvetica Neue", "Arial Narrow", Arial, sans-serif;
+    --body: "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--body);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--mint); color: var(--black); }
+  ::-webkit-scrollbar { width: 9px; }
+  ::-webkit-scrollbar-track { background: #000; }
+  ::-webkit-scrollbar-thumb { background: #0e3a34; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--mint); }
+
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+
+  /* ============ LED LINE SYSTEM ============ */
+  .led-h {
+    position: relative;
+    height: 1px;
+    width: 100%;
+    background: var(--mint-12);
+    overflow: hidden;
+  }
+  .led-h::after {
+    content: '';
+    position: absolute;
+    top: -1.5px;
+    left: -18%;
+    width: 15%;
+    height: 4px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, transparent 0%, rgba(63,225,208,0.35) 55%, var(--mint) 88%, #eafffb 100%);
+    box-shadow: 0 0 8px 1px var(--mint-45), 0 0 22px 4px var(--mint-20);
+    animation: ledH 6s linear infinite;
+  }
+  @keyframes ledH { to { left: 118%; } }
+
+  .led-v {
+    position: relative;
+    width: 1px;
+    background: var(--mint-12);
+    overflow: hidden;
+  }
+  .led-v::after {
+    content: '';
+    position: absolute;
+    left: -1.5px;
+    top: -22%;
+    height: 18%;
+    width: 4px;
+    border-radius: 4px;
+    background: linear-gradient(180deg, transparent 0%, rgba(63,225,208,0.35) 55%, var(--mint) 88%, #eafffb 100%);
+    box-shadow: 0 0 8px 1px var(--mint-45), 0 0 22px 4px var(--mint-20);
+    animation: ledV 7s linear infinite;
+  }
+  @keyframes ledV { to { top: 122%; } }
+
+  /* slower/offset variants so lights don't sync */
+  .led-slow::after { animation-duration: 9s; }
+  .led-delay1::after { animation-delay: 2.2s; }
+  .led-delay2::after { animation-delay: 4.4s; }
+
+  /* scroll progress LED at very top */
+  #progressWrap {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 16px;
+    z-index: 300;
+    background: transparent;
+    cursor: pointer;
+    touch-action: none;
+  }
+  #progressWrap::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: rgba(63,225,208,0.08);
+  }
+  #progressWrap:hover #progressBar, #progressWrap.dragging #progressBar { height: 4px; }
+  #progressWrap:hover #progressBar::after, #progressWrap.dragging #progressBar::after {
+    width: 12px; height: 12px; top: -4px; right: -6px;
+  }
+  #progressBar {
+    height: 2px;
+    transition: height 0.15s;
+    width: 0%;
+    background: linear-gradient(90deg, rgba(63,225,208,0.25), var(--mint));
+    box-shadow: 0 0 10px 1px var(--mint-45);
+    position: relative;
+  }
+  #progressBar::after {
+    content: '';
+    position: absolute;
+    right: -3px; top: -2px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #eafffb;
+    box-shadow: 0 0 10px 2px var(--mint), 0 0 24px 6px var(--mint-45);
+    transition: width 0.15s, height 0.15s, top 0.15s;
+  }
+  img { -webkit-user-select: none; user-select: none; -webkit-user-drag: none; -webkit-touch-callout: none; pointer-events: none; }
+  .lightbox img { pointer-events: auto; }
+
+  /* border-run SVG (injected on cards) */
+  .border-run {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .border-run rect {
+    fill: none;
+    stroke: var(--mint);
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 14 86;
+    stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 5px var(--mint));
+    animation: borderRun 3.2s linear infinite;
+  }
+  @keyframes borderRun { to { stroke-dashoffset: -100; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .led-h::after, .led-v::after, .border-run rect { animation: none !important; }
+    html { scroll-behavior: auto; }
+    .reveal { transition: none !important; }
+  }
+
+  /* ============ NAV ============ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 4vw;
+    transition: background 0.4s, padding 0.4s, border-color 0.4s;
+    border-bottom: 1px solid transparent;
+  }
+  nav.solid {
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 14px 4vw;
+    border-bottom-color: var(--mint-12);
+  }
+  .brand {
+    font-family: var(--head);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 3px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+  .brand em { font-style: normal; color: var(--mint); }
+  .js-mark {
+    font-family: "Arial Black", var(--head);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 24px;
+    letter-spacing: 0;
+    padding-right: 4px;
+    background: linear-gradient(160deg, #ffffff 0%, #9fb8b4 25%, #eafffb 48%, #6c8a86 70%, #ffffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 7px rgba(234,255,251,0.55));
+  }
+  .js-img { height: 30px; width: auto; }
+  .nav-right { display: flex; align-items: center; gap: 26px; }
+  .nav-social { display: flex; align-items: center; gap: 15px; }
+  .nav-social a { display: flex; color: var(--w-60); transition: color 0.25s, filter 0.25s; }
+  .nav-social a:hover { color: var(--mint); filter: drop-shadow(0 0 7px var(--mint-45)); }
+  .nav-social svg { width: 17px; height: 17px; }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    position: relative;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--w-60);
+    padding-bottom: 5px;
+    transition: color 0.25s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    height: 1px; width: 100%;
+    background: var(--mint-12);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .nav-links a::before {
+    content: '';
+    position: absolute;
+    bottom: -1.5px;
+    left: -20%;
+    width: 22%;
+    height: 3px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, transparent, var(--mint) 80%, #eafffb);
+    box-shadow: 0 0 8px 1px var(--mint-45);
+    opacity: 0;
+  }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-links a:hover::before { opacity: 1; animation: ledH 1.6s linear infinite; }
+
+  /* ============ SHARED SECTION CHROME ============ */
+  section { position: relative; padding: 110px 4vw; }
+  .sec-label {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: var(--mint);
+    font-size: 12px;
+    letter-spacing: 5px;
+    margin-bottom: 26px;
+  }
+  .sec-label .tick { width: 42px; height: 1px; background: var(--mint); box-shadow: 0 0 8px var(--mint-45); }
+  h2 {
+    font-family: var(--head);
+    font-weight: 800;
+    font-size: clamp(46px, 7.5vw, 118px);
+    line-height: 0.92;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  h2 .m { color: var(--mint); }
+  .sec-head-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 55px;
+  }
+  .sec-count {
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--w-40);
+    white-space: nowrap;
+    padding-bottom: 10px;
+  }
+  .sec-count b { color: var(--mint); font-weight: 600; }
+
+  .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ============ HERO ============ */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 140px 4vw 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-tag {
+    color: var(--mint);
+    font-size: 12px;
+    letter-spacing: 6px;
+    margin-bottom: 34px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .hero-tag .tick { width: 54px; height: 1px; background: var(--mint); box-shadow: 0 0 8px var(--mint-45); }
+  .hero h1 {
+    font-family: var(--head);
+    font-weight: 800;
+    font-size: clamp(58px, 10.5vw, 168px);
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    max-width: 13ch;
+  }
+  .hero h1 .m { color: var(--mint); text-shadow: 0 0 45px var(--mint-20); }
+  .hero-led { margin: 44px 0 36px; max-width: 720px; }
+  .hero-sub {
+    color: var(--w-60);
+    font-size: 17px;
+    line-height: 1.75;
+    max-width: 540px;
+  }
+  .hero-btns { display: flex; gap: 18px; margin-top: 44px; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--body);
+    font-size: 13px;
+    letter-spacing: 3px;
+    padding: 17px 34px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: box-shadow 0.3s, transform 0.3s, background 0.3s, color 0.3s;
+    display: inline-block;
+  }
+  .btn-solid {
+    background: var(--mint);
+    color: var(--black);
+    border: 1px solid var(--mint);
+    font-weight: 600;
+  }
+  .btn-solid:hover { box-shadow: 0 0 32px var(--mint-45); transform: translateY(-2px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid var(--mint-45);
+  }
+  .btn-ghost:hover { border-color: var(--mint); box-shadow: 0 0 22px var(--mint-20); transform: translateY(-2px); }
+
+  .hero-collage {
+    position: absolute;
+    right: 3vw;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30vw;
+    max-width: 470px;
+    pointer-events: none;
+  }
+  .hero-collage .hc {
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid var(--mint-20);
+    box-shadow: 0 24px 70px rgba(0,0,0,0.85);
+    transition: transform 0.25s ease-out;
+  }
+  .hero-collage img { width: 100%; height: 100%; object-fit: cover; filter: saturate(1.05); }
+  .hc1 { width: 66%; aspect-ratio: 4/5; right: 0; top: -260px; z-index: 2; }
+  .hc2 { width: 48%; aspect-ratio: 4/5; left: 0; top: -60px;  z-index: 3; }
+  .hc3 { width: 44%; aspect-ratio: 1/1; right: 8%; top: 130px; z-index: 1; opacity: 0.85; }
+  .hero-scroll {
+    position: absolute;
+    bottom: 30px; left: 4vw;
+    color: var(--w-40);
+    font-size: 11px;
+    letter-spacing: 4px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+  .hero-scroll .led-v { height: 44px; display: inline-block; }
+
+  /* ============ FEATURED ============ */
+  .feature-row {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 5vw;
+    align-items: center;
+    margin-bottom: 130px;
+  }
+  .feature-row.flip { grid-template-columns: 1fr 1.55fr; }
+  .feature-row.flip .f-img { order: 2; }
+  .feature-row.flip .f-meta { order: 1; text-align: right; }
+  .feature-row.flip .f-meta .f-cat { justify-content: flex-end; }
+  .f-img {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.35s, box-shadow 0.35s;
+  }
+  .f-img img { width: 100%; transition: transform 0.7s cubic-bezier(.2,.7,.2,1); }
+  .f-img:hover { border-color: var(--mint); box-shadow: 0 0 44px var(--mint-20); }
+  .f-img:hover img { transform: scale(1.035); }
+  .f-img:hover .border-run { opacity: 1; }
+  .f-img .view-tag {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 40px 24px 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.92), transparent);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .f-img:hover .view-tag { opacity: 1; }
+  .view-tag .vt { color: var(--mint); font-size: 11px; letter-spacing: 4px; }
+  .f-num {
+    font-family: var(--head);
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: var(--mint);
+    margin-bottom: 18px;
+  }
+  .f-title {
+    font-family: var(--head);
+    font-weight: 800;
+    font-size: clamp(30px, 3.4vw, 52px);
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .f-sub { color: var(--w-60); font-size: 15px; line-height: 1.7; margin-bottom: 22px; }
+  .f-cat {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: var(--mint);
+    border: 1px solid var(--mint-45);
+    padding: 7px 14px;
+    text-transform: uppercase;
+  }
+
+  /* ============ CATEGORY GRIDS ============ */
+  .grid { columns: 3 340px; column-gap: 20px; }
+  .g-card {
+    position: relative;
+    break-inside: avoid;
+    margin-bottom: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.05);
+    background: #030303;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .g-card img { width: 100%; height: auto; transition: transform 0.6s cubic-bezier(.2,.7,.2,1); background: #050505; }
+  .g-card:hover { border-color: var(--mint); box-shadow: 0 0 30px var(--mint-20); z-index: 2; }
+  .g-card:hover img { transform: scale(1.04); }
+  .g-card:hover .border-run { opacity: 1; }
+  .g-cap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 18px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 42%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .g-card:hover .g-cap { opacity: 1; }
+  .g-cap .t { font-family: var(--head); font-weight: 700; font-size: 17px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .g-cap .s { color: var(--mint); font-size: 10px; letter-spacing: 2.5px; margin-top: 5px; text-transform: uppercase; }
+
+  /* ============ ABOUT ============ */
+  .about-wrap {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 5vw;
+    max-width: 1100px;
+  }
+  .about-line { min-height: 100%; }
+  .about-copy p { color: var(--w-60); font-size: 16.5px; line-height: 1.85; max-width: 620px; margin-bottom: 22px; }
+  .about-copy p b { color: var(--white); font-weight: 600; }
+  .tools { display: flex; flex-wrap: wrap; gap: 12px 26px; margin-top: 34px; max-width: 620px; }
+  .tools span {
+    color: var(--w-40);
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    position: relative;
+    padding-left: 16px;
+  }
+  .tools span::before { content: ''; position: absolute; left: 0; top: 50%; width: 7px; height: 1px; background: var(--mint); }
+
+  /* ============ SERVICES ============ */
+  .svc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .svc {
+    position: relative;
+    border: 1px solid var(--mint-20);
+    padding: 42px 34px;
+    background: #010101;
+    transition: transform 0.35s, box-shadow 0.35s, border-color 0.35s;
+    overflow: hidden;
+  }
+  .svc:hover { transform: translateY(-6px); border-color: var(--mint-45); box-shadow: 0 18px 50px rgba(0,0,0,0.8), 0 0 26px var(--mint-12); }
+  .svc::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -30%;
+    width: 26%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--mint) 80%, #eafffb);
+    box-shadow: 0 0 10px 1px var(--mint-45);
+    opacity: 0;
+  }
+  .svc:hover::after { opacity: 1; animation: ledH 1.8s linear infinite; }
+  .svc .n { color: var(--mint); font-size: 12px; letter-spacing: 4px; margin-bottom: 20px; }
+  .svc h3 {
+    font-family: var(--head);
+    font-weight: 800;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+  .svc p { color: var(--w-60); font-size: 14.5px; line-height: 1.7; }
+
+  /* ============ PROCESS ============ */
+  .proc-wrap { position: relative; max-width: 1200px; }
+  .proc-track { position: absolute; left: 0; right: 0; top: 26px; }
+  .proc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; }
+  .step { position: relative; padding-top: 64px; }
+  .step::before {
+    content: '';
+    position: absolute;
+    top: 20px; left: 0;
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: var(--black);
+    border: 2px solid var(--mint);
+    box-shadow: 0 0 12px var(--mint-45);
+  }
+  .step .n {
+    font-family: var(--head);
+    font-weight: 800;
+    color: var(--mint);
+    font-size: 15px;
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+  }
+  .step h3 { font-family: var(--head); font-weight: 800; font-size: 26px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px; }
+  .step p { color: var(--w-60); font-size: 14.5px; line-height: 1.7; }
+
+  /* ============ CONTACT ============ */
+  .contact { padding-bottom: 60px; }
+  .contact h2 { max-width: 12ch; }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 6vw;
+    margin-top: 60px;
+  }
+  .c-left p { color: var(--w-60); font-size: 16.5px; line-height: 1.8; max-width: 480px; margin-bottom: 40px; }
+  .c-links { display: flex; flex-direction: column; gap: 18px; }
+  .c-links a {
+    text-decoration: none;
+    color: var(--white);
+    font-size: 14px;
+    letter-spacing: 2.5px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: fit-content;
+    transition: color 0.25s;
+  }
+  .c-links a:hover { color: var(--mint); }
+  .c-links a .tick { width: 26px; height: 1px; background: var(--mint); box-shadow: 0 0 6px var(--mint-45); }
+  .c-lead-line { margin: 50px 0 26px; max-width: 420px; }
+  form { display: flex; flex-direction: column; gap: 16px; }
+  .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  input, textarea, select {
+    background: #030303;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--white);
+    font-family: var(--body);
+    font-size: 14px;
+    padding: 15px 16px;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    width: 100%;
+    border-radius: 0;
+    -webkit-appearance: none;
+  }
+  select { color: var(--w-60); }
+  textarea { min-height: 130px; resize: vertical; }
+  input:focus, textarea:focus, select:focus { border-color: var(--mint); box-shadow: 0 0 14px var(--mint-12); }
+  ::placeholder { color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+
+  /* ============ FOOTER ============ */
+  footer { padding: 0 4vw 40px; }
+  .foot-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 44px 0 30px;
+  }
+  .foot-brand { font-family: var(--head); font-weight: 800; font-size: 22px; letter-spacing: 3px; text-transform: uppercase; }
+  .foot-brand em { font-style: normal; color: var(--mint); }
+  .foot-tag { color: var(--w-40); font-size: 11px; letter-spacing: 3px; margin-top: 8px; }
+  .foot-links { display: flex; gap: 26px; flex-wrap: wrap; }
+  .foot-links a { color: var(--w-60); text-decoration: none; font-size: 12px; letter-spacing: 2.5px; transition: color 0.25s; }
+  .foot-links a:hover { color: var(--mint); }
+  .copyright { color: rgba(255,255,255,0.25); font-size: 11px; letter-spacing: 2px; margin-top: 8px; }
+
+  /* ============ LIGHTBOX ============ */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    background: rgba(0,0,0,0.97);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 30px;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 76vh;
+    border: 1px solid var(--mint-20);
+    box-shadow: 0 0 70px rgba(63,225,208,0.16);
+    animation: lbIn 0.35s ease;
+  }
+  @keyframes lbIn { from { opacity: 0; transform: scale(0.96); } }
+  .lb-meta { text-align: center; margin-top: 24px; }
+  .lb-meta .t { font-family: var(--head); font-weight: 800; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
+  .lb-meta .s { color: var(--mint); font-size: 11px; letter-spacing: 3.5px; margin-top: 6px; text-transform: uppercase; }
+  .lb-meta .n { color: var(--w-40); font-size: 11px; letter-spacing: 2px; margin-top: 8px; }
+  .lb-ctl {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px; height: 52px;
+    background: transparent;
+    border: 1px solid var(--mint-45);
+    color: var(--mint);
+    font-size: 22px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s;
+  }
+  .lb-ctl:hover { background: var(--mint); color: var(--black); box-shadow: 0 0 26px var(--mint-45); }
+  .lb-prev { left: 26px; }
+  .lb-next { right: 26px; }
+  .lb-x { position: absolute; top: 24px; right: 26px; transform: none; }
+  .lb-load { position: absolute; color: var(--mint); font-size: 11px; letter-spacing: 5px; animation: pulse 1.1s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.25; } }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 1100px) {
+    .hero-collage { display: none; }
+    .hero h1 { max-width: none; }
+  }
+  @media (max-width: 820px) {
+    .nav-links { gap: 18px; }
+    .nav-links a { font-size: 10px; letter-spacing: 2px; }
+    .brand { font-size: 14px; letter-spacing: 2px; }
+  }
+  @media (max-width: 700px) {
+    .brand > span:last-child { display: none; }
+    .nav-right { gap: 14px; }
+  }
+  @media (max-width: 480px) {
+    nav { padding: 14px 5vw; }
+    .brand { font-size: 12.5px; letter-spacing: 1.5px; }
+    .nav-links { gap: 12px; }
+    .nav-links a { font-size: 9px; letter-spacing: 1.5px; }
+    section { padding: 80px 5vw; }
+    .feature-row, .feature-row.flip { grid-template-columns: 1fr; gap: 26px; margin-bottom: 80px; }
+    .feature-row.flip .f-img { order: 1; }
+    .feature-row.flip .f-meta { order: 2; text-align: left; }
+    .feature-row.flip .f-meta .f-cat { justify-content: flex-start; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .frow { grid-template-columns: 1fr; }
+    .about-wrap { grid-template-columns: 1fr; }
+    .about-line { display: none; }
+    .lb-ctl { width: 42px; height: 42px; font-size: 18px; }
+    .lb-prev { left: 10px; } .lb-next { right: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progressWrap"><div id="progressBar"></div></div>
+
+<nav id="nav">
+  <a class="brand" href="#top">
+    <span class="js-mark">JS</span>
+    <img class="js-img" src="logo.png" alt="" style="display:none" onload="this.style.display='inline-block';this.previousElementSibling.style.display='none'" onerror="this.remove()">
+    <span>DESIGNS<em>BY</em>SALZ</span>
+  </a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#work">WORK</a>
+      <a href="#about">ABOUT</a>
+      <a href="#services">SERVICES</a>
+      <a href="#contact">CONTACT</a>
+    </div>
+    <div class="nav-social">
+      <a href="https://www.instagram.com/designsbysalz/" id="navIg" aria-label="Instagram" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/></svg>
+      </a>
+      <a href="mailto:jsalz3120@gmail.com" aria-label="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3.5 6.5 12 13l8.5-6.5"/></svg>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="hero-tag"><span class="tick"></span>SPORTS GRAPHIC DESIGNER</div>
+  <h1>DESIGNING THE <span class="m">MOMENTS</span> PEOPLE REMEMBER.</h1>
+  <div class="led-h hero-led"></div>
+  <p class="hero-sub">Designs by Salz creates bold sports graphics, athlete branding, photography, and digital content built to capture attention and make every moment feel bigger.</p>
+  <div class="hero-btns">
+    <a class="btn btn-solid" href="#work">VIEW MY WORK</a>
+    <a class="btn btn-ghost" href="#contact">START A PROJECT</a>
+  </div>
+  <div class="hero-collage" id="collage">
+    <div class="hc hc1"><img id="hcImg1" alt=""></div>
+    <div class="hc hc2"><img id="hcImg2" alt=""></div>
+    <div class="hc hc3"><img id="hcImg3" alt=""></div>
+  </div>
+  <a class="hero-scroll" href="#work"><span class="led-v"></span>SCROLL</a>
+</header>
+
+<div style="padding:0 4vw"><div class="led-h led-slow"></div></div>
+
+<!-- ================= FEATURED ================= -->
+<section id="work">
+  <div class="sec-label"><span class="tick"></span>01 / FEATURED PROJECTS</div>
+  <div class="sec-head-row">
+    <h2>MY <span class="m">WORK</span></h2>
+    <div class="sec-count"><b id="totalCount">–</b> ORIGINAL PIECES IN THE ARCHIVE</div>
+  </div>
+  <div id="featured"></div>
+</section>
+
+<!-- category sections injected here -->
+<div id="categories"></div>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="sec-label"><span class="tick"></span><span id="numAbout">08</span> / THE DESIGNER</div>
+  <div class="sec-head-row">
+    <h2>CREATIVITY BUILT<br>AROUND THE <span class="m">MOMENT.</span></h2>
+  </div>
+  <div class="about-wrap">
+    <div class="led-v led-slow about-line"></div>
+    <div class="about-copy reveal">
+      <p>I am <b>Jonah Salz</b>, a graphic designer and sports creative focused on making athletes, teams, and moments stand out. My work combines bold composition, photography, typography, and visual storytelling to create graphics that feel energetic, professional, and memorable.</p>
+      <p>I create <b>sports graphics, athlete branding, commitment designs, social media content, and photography</b> for athletes, schools, teams, and organizations. Every project is designed with a clear purpose: capture attention, communicate the story, and make the moment feel important.</p>
+      <div class="tools">
+        <span>Adobe Photoshop</span><span>Adobe Illustrator</span><span>Adobe Lightroom</span>
+        <span>Adobe After Effects</span><span>Adobe Premiere Pro</span><span>Canva</span><span>Blender</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="padding:0 4vw"><div class="led-h led-delay1"></div></div>
+
+<!-- ================= SERVICES ================= -->
+<section id="services">
+  <div class="sec-label"><span class="tick"></span><span id="numServices">09</span> / SERVICES</div>
+  <div class="sec-head-row">
+    <h2>WHAT I <span class="m">CREATE</span></h2>
+  </div>
+  <div class="svc-grid">
+    <div class="svc reveal"><div class="n">S.01</div><h3>Sports Graphic Design</h3><p>Custom graphics for athletes, teams, schools, events, and social media.</p></div>
+    <div class="svc reveal"><div class="n">S.02</div><h3>Athlete Branding</h3><p>Personal branding systems and visual content that help athletes build a recognizable identity.</p></div>
+    <div class="svc reveal"><div class="n">S.03</div><h3>Commitment Graphics</h3><p>Professional commitment and signing-day graphics created around each athlete's story.</p></div>
+    <div class="svc reveal"><div class="n">S.04</div><h3>Social Media Design</h3><p>Consistent visual content for announcements, promotions, schedules, and campaigns.</p></div>
+    <div class="svc reveal"><div class="n">S.05</div><h3>Sports Photography</h3><p>Action photography and edited images created for athletes, teams, and digital platforms.</p></div>
+    <div class="svc reveal"><div class="n">S.06</div><h3>Creative Campaigns</h3><p>Complete visual concepts for launches, events, seasons, partnerships, and special moments.</p></div>
+  </div>
+</section>
+
+<div style="padding:0 4vw"><div class="led-h led-delay2"></div></div>
+
+<!-- ================= PROCESS ================= -->
+<section id="process">
+  <div class="sec-label"><span class="tick"></span><span id="numProcess">10</span> / THE PROCESS</div>
+  <div class="sec-head-row">
+    <h2>FROM IDEA TO <span class="m">ICONIC</span></h2>
+  </div>
+  <div class="proc-wrap">
+    <div class="led-h led-slow proc-track"></div>
+    <div class="proc-grid">
+      <div class="step reveal"><div class="n">01 — DISCOVER</div><h3>Discover</h3><p>Understand the athlete, team, audience, goal, and story behind the project.</p></div>
+      <div class="step reveal"><div class="n">02 — DEVELOP</div><h3>Develop</h3><p>Create the visual direction, typography, composition, colors, and overall concept.</p></div>
+      <div class="step reveal"><div class="n">03 — DESIGN</div><h3>Design</h3><p>Build the final graphic with careful attention to detail, energy, and visual hierarchy.</p></div>
+      <div class="step reveal"><div class="n">04 — DELIVER</div><h3>Deliver</h3><p>Prepare polished, high-quality files optimized for social media, digital use, or print.</p></div>
+    </div>
+  </div>
+</section>
+
+<div style="padding:0 4vw"><div class="led-h"></div></div>
+
+<!-- ================= CONTACT ================= -->
+<section class="contact" id="contact">
+  <div class="sec-label"><span class="tick"></span><span id="numContact">11</span> / GET IN TOUCH</div>
+  <h2>LET'S CREATE SOMETHING PEOPLE <span class="m">REMEMBER.</span></h2>
+  <div class="contact-grid">
+    <div class="c-left reveal">
+      <p>Looking for bold graphics, athlete branding, photography, or creative content? Let's build something that makes your next moment stand out.</p>
+      <div class="c-links">
+        <a href="mailto:jsalz3120@gmail.com"><span class="tick"></span>JSALZ3120@GMAIL.COM</a>
+        <a href="https://www.instagram.com/designsbysalz/" id="igLink" target="_blank" rel="noopener"><span class="tick"></span>INSTAGRAM</a>
+      </div>
+      <div class="led-h c-lead-line"></div>
+      <a class="btn btn-solid" href="mailto:jsalz3120@gmail.com?subject=Project%20Inquiry%20—%20Designs%20by%20Salz">START A PROJECT</a>
+    </div>
+    <form id="contactForm" class="reveal">
+      <div class="frow">
+        <input type="text" name="name" placeholder="NAME" required>
+        <input type="email" name="email" placeholder="EMAIL" required>
+      </div>
+      <div class="frow">
+        <input type="text" name="org" placeholder="ORGANIZATION / TEAM">
+        <select name="type">
+          <option value="" disabled selected>PROJECT TYPE</option>
+          <option>Sports Graphics</option>
+          <option>Athlete Branding</option>
+          <option>Commitment Design</option>
+          <option>Social Media Content</option>
+          <option>Photography</option>
+          <option>Creative Campaign</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <textarea name="details" placeholder="PROJECT DETAILS" required></textarea>
+      <input type="text" name="deadline" placeholder="PREFERRED DEADLINE">
+      <button class="btn btn-ghost" type="submit" style="align-self:flex-start">SEND MESSAGE</button>
+    </form>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="led-h led-slow"></div>
+  <div class="foot-inner">
+    <div>
+      <div class="foot-brand">DESIGNS<em>BY</em>SALZ</div>
+      <div class="foot-tag">SPORTS GRAPHIC DESIGNER</div>
+      <div class="copyright">© 2026 DESIGNS BY SALZ. ALL RIGHTS RESERVED.</div>
+    </div>
+    <div class="foot-links">
+      <a href="#work">WORK</a>
+      <a href="#about">ABOUT</a>
+      <a href="#services">SERVICES</a>
+      <a href="#contact">CONTACT</a>
+      <a href="mailto:jsalz3120@gmail.com">EMAIL</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= LIGHTBOX ================= -->
+<div class="lightbox" id="lb">
+  <div class="lb-load" id="lbLoad">LOADING</div>
+  <img id="lbImg" alt="">
+  <div class="lb-meta">
+    <div class="t" id="lbT"></div>
+    <div class="s" id="lbS"></div>
+    <div class="n" id="lbN"></div>
+  </div>
+  <button class="lb-ctl lb-prev" id="lbPrev">&#8249;</button>
+  <button class="lb-ctl lb-next" id="lbNext">&#8250;</button>
+  <button class="lb-ctl lb-x" id="lbX">&#10005;</button>
+</div>
+
+<script src="images.js"></script>
+<script>
+const enc = f => encodeURIComponent(f);
+const jpg = f => f.replace(/\.[^.]+$/, '.jpg');
+const prevSrc = a => 'prev/' + enc(jpg(a.f));
+const fullSrc = a => 'full/' + enc(jpg(a.f));
+const CATS = [
+  { key: 'football',   title: 'FOOT<span class="m">BALL</span>',        label: 'NFL / COLLEGE / HIGH SCHOOL' },
+  { key: 'baseball',   title: 'BASE<span class="m">BALL</span>',        label: 'MLB / WBC / HIGH SCHOOL' },
+  { key: 'basketball', title: 'BASKET<span class="m">BALL</span>',      label: 'NBA / COLLEGE / HIGH SCHOOL' },
+  { key: 'hockey',     title: 'HOC<span class="m">KEY</span>',          label: 'MILLBURN MILLERS' },
+  { key: 'more',       title: 'MORE <span class="m">SPORTS</span>',     label: 'GOLF / SOCCER / LAX / WRESTLING +' },
+  { key: 'other',      title: 'OFF THE <span class="m">FIELD</span>',   label: 'CONCEPTS / POSTERS / EXPERIMENTS' },
+];
+const CATNAME = { gameday:'Sports Graphics', commitment:'Commitment Design', branding:'Athlete Branding', social:'Social Media', photography:'Photography', experimental:'Experimental' };
+
+/* ---------- featured: hand-picked lineup ---------- */
+const FEATURED_FILES = [
+  "Untitled - July 24, 2026 at 11.10.21-29.jpg",
+  "Edit Type Layer (2) copy.png",
+  "asnjkasndsa.png",
+  "asdas.png",
+  "Edit Type Layer (2) (2) (7) (1) (2) (25) copy.png",
+  "Edit Type Layer (2) (2) (7) (1) (2) (28) copy.png",
+  "Edit Type Layer (2) (1).png",
+  "Untitled - July 24, 2026 at 11.10.21-13.jpg",
+  "Untitled - July 24, 2026 at 11.10.21-14.jpg",
+  "Untitled - July 24, 2026 at 11.10.21-25.jpg",
+];
+const normName = s => s.replace(/[  ]/g, ' ');
+const featured = FEATURED_FILES.map(f => ARTWORKS.find(a => normName(a.f) === normName(f))).filter(Boolean);
+const featSet = new Set(featured.map(a => a.f));
+const byQ = [...ARTWORKS].sort((a,b) => (b.q||0) - (a.q||0));
+
+document.getElementById('totalCount').textContent = ARTWORKS.length;
+
+/* ---------- hero collage: hand-picked three ---------- */
+const COLLAGE_FILES = [
+  "Untitled - July 24, 2026 at 11.10.21-13.jpg",
+  "Untitled - July 24, 2026 at 11.10.21-14.jpg",
+  "Untitled - July 24, 2026 at 11.10.21-25.jpg",
+];
+const collagePicks = COLLAGE_FILES.map(f => ARTWORKS.find(a => a.f === f)).filter(Boolean);
+['hcImg1','hcImg2','hcImg3'].forEach((id, i) => {
+  if (collagePicks[i]) {
+    const el = document.getElementById(id);
+    el.src = prevSrc(collagePicks[i]);
+    el.alt = collagePicks[i].t;
+  }
+});
+
+/* ---------- border-run svg ---------- */
+function borderRunSVG() {
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('class', 'border-run');
+  const r = document.createElementNS(ns, 'rect');
+  r.setAttribute('x', '1'); r.setAttribute('y', '1');
+  r.setAttribute('width', '98%'); r.setAttribute('height', '98%');
+  r.setAttribute('pathLength', '100');
+  svg.appendChild(r);
+  return svg;
+}
+
+/* ---------- flat click-order list ---------- */
+let clickList = [];
+
+/* ---------- featured rows ---------- */
+const featWrap = document.getElementById('featured');
+featured.forEach((a, i) => {
+  const row = document.createElement('div');
+  row.className = 'feature-row reveal' + (i % 2 ? ' flip' : '');
+  const ratio = a.w && a.h ? `aspect-ratio:${a.w}/${a.h};` : '';
+  row.innerHTML = `
+    <div class="f-img" data-f="${enc(a.f)}">
+      <img loading="${i < 2 ? 'eager' : 'lazy'}" src="${prevSrc(a)}" alt="${(a.t||'').replace(/"/g,'&quot;')}" style="${ratio}">
+      <div class="view-tag"><span class="vt">VIEW PROJECT&nbsp;&nbsp;&#8599;</span><span class="vt">${String(i+1).padStart(2,'0')}</span></div>
+    </div>
+    <div class="f-meta">
+      <div class="f-num">${String(i+1).padStart(2,'0')} /</div>
+      <div class="f-title">${a.t}</div>
+      <div class="f-sub">${a.s || ''}</div>
+      <div class="f-cat"><span class="chip">${CATNAME[a.c]}</span><span class="chip">2026</span></div>
+    </div>`;
+  const fi = row.querySelector('.f-img');
+  fi.appendChild(borderRunSVG());
+  fi.addEventListener('click', () => openLB(clickList.indexOf(a)));
+  featWrap.appendChild(row);
+});
+
+/* ---------- category sections ---------- */
+const catWrap = document.getElementById('categories');
+let secNum = 1;
+CATS.forEach(cat => {
+  const items = ARTWORKS.filter(a => a.sp === cat.key && !featSet.has(a.f));
+  if (!items.length) return;
+  secNum++;
+  const num = String(secNum).padStart(2, '0');
+  const sec = document.createElement('section');
+  sec.id = 'cat-' + cat.key;
+  sec.innerHTML = `
+    <div style="position:absolute;top:0;left:4vw;right:4vw"><div class="led-h"></div></div>
+    <div class="sec-label"><span class="tick"></span>${num} / ${cat.label}</div>
+    <div class="sec-head-row">
+      <h2>${cat.title}</h2>
+      <div class="sec-count"><b>${items.length}</b> PIECES</div>
+    </div>
+    <div class="grid"></div>`;
+  const grid = sec.querySelector('.grid');
+  items.forEach(a => {
+    const card = document.createElement('div');
+    card.className = 'g-card reveal';
+    const ratio = a.w && a.h ? `aspect-ratio:${a.w}/${a.h};` : '';
+    card.innerHTML = `
+      <img loading="lazy" src="${prevSrc(a)}" alt="${(a.t||'').replace(/"/g,'&quot;')}" style="${ratio}">
+      <div class="g-cap"><div class="t">${a.t}</div><div class="s">${a.s || CATNAME[a.c]}</div></div>`;
+    card.appendChild(borderRunSVG());
+    card.addEventListener('click', () => openLB(clickList.indexOf(a)));
+    grid.appendChild(card);
+  });
+  catWrap.appendChild(sec);
+});
+
+/* click order = featured first, then category order */
+clickList = [...featured];
+CATS.forEach(cat => clickList.push(...ARTWORKS.filter(a => a.sp === cat.key && !featSet.has(a.f))));
+
+/* renumber the fixed sections after however many categories rendered */
+['numAbout','numServices','numProcess','numContact'].forEach((id, i) => {
+  document.getElementById(id).textContent = String(secNum + 1 + i).padStart(2, '0');
+});
+
+/* ---------- reveal on scroll ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), { rootMargin: '60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ---------- nav solid + progress LED (doubles as a draggable scrollbar) ---------- */
+const nav = document.getElementById('nav');
+const bar = document.getElementById('progressBar');
+const wrap = document.getElementById('progressWrap');
+addEventListener('scroll', () => {
+  nav.classList.toggle('solid', scrollY > 40);
+  const max = document.documentElement.scrollHeight - innerHeight;
+  bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+}, { passive: true });
+
+let scrubbing = false;
+function scrubTo(clientX) {
+  const ratio = Math.min(1, Math.max(0, clientX / innerWidth));
+  const max = document.documentElement.scrollHeight - innerHeight;
+  document.documentElement.style.scrollBehavior = 'auto';
+  scrollTo(0, ratio * max);
+  document.documentElement.style.scrollBehavior = '';
+}
+wrap.addEventListener('pointerdown', e => {
+  scrubbing = true;
+  wrap.classList.add('dragging');
+  scrubTo(e.clientX);
+  try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
+});
+wrap.addEventListener('pointermove', e => { if (scrubbing) scrubTo(e.clientX); });
+addEventListener('pointerup', () => { scrubbing = false; wrap.classList.remove('dragging'); });
+
+/* ---------- artwork protection (deterrents) ---------- */
+document.addEventListener('contextmenu', e => { e.preventDefault(); });
+document.addEventListener('dragstart', e => { e.preventDefault(); });
+document.addEventListener('keydown', e => {
+  const k = (e.key || '').toLowerCase();
+  if ((e.metaKey || e.ctrlKey) && (k === 's' || k === 'u' || k === 'p')) e.preventDefault();
+});
+document.addEventListener('keyup', e => {
+  if (e.key === 'PrintScreen' && navigator.clipboard) navigator.clipboard.writeText('').catch(() => {});
+});
+
+/* ---------- hero collage parallax ---------- */
+const collage = document.getElementById('collage');
+if (matchMedia('(pointer:fine)').matches) {
+  addEventListener('mousemove', e => {
+    const dx = (e.clientX / innerWidth - 0.5), dy = (e.clientY / innerHeight - 0.5);
+    collage.querySelectorAll('.hc').forEach((el, i) => {
+      const d = (i + 1) * 7;
+      el.style.transform = `translate(${dx * d}px, ${dy * d}px)`;
+    });
+  }, { passive: true });
+}
+
+/* ---------- lightbox ---------- */
+const lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg'), lbLoad = document.getElementById('lbLoad');
+let idx = 0;
+function openLB(i) { if (i < 0) return; idx = i; showLB(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function showLB() {
+  const a = clickList[idx];
+  lbLoad.style.display = 'block';
+  lbImg.style.opacity = '0.3';
+  lbImg.src = prevSrc(a);
+  const full = new Image();
+  full.onload = () => { if (clickList[idx] === a) { lbImg.src = full.src; lbImg.style.opacity = '1'; lbLoad.style.display = 'none'; } };
+  full.src = fullSrc(a);
+  document.getElementById('lbT').textContent = a.t;
+  document.getElementById('lbS').textContent = a.s || CATNAME[a.c];
+  document.getElementById('lbN').textContent = (idx + 1) + ' / ' + clickList.length;
+}
+function closeLB() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('lbX').onclick = closeLB;
+document.getElementById('lbPrev').onclick = () => { idx = (idx - 1 + clickList.length) % clickList.length; showLB(); };
+document.getElementById('lbNext').onclick = () => { idx = (idx + 1) % clickList.length; showLB(); };
+lb.addEventListener('click', e => { if (e.target === lb) closeLB(); });
+addEventListener('keydown', e => {
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLB();
+  if (e.key === 'ArrowLeft') { idx = (idx - 1 + clickList.length) % clickList.length; showLB(); }
+  if (e.key === 'ArrowRight') { idx = (idx + 1) % clickList.length; showLB(); }
+});
+
+/* ---------- contact form -> mailto ---------- */
+document.getElementById('contactForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const d = new FormData(e.target);
+  const body = `Name: ${d.get('name')}%0AEmail: ${d.get('email')}%0AOrganization: ${d.get('org')||'-'}%0AProject type: ${d.get('type')||'-'}%0ADeadline: ${d.get('deadline')||'-'}%0A%0A${encodeURIComponent(d.get('details'))}`;
+  location.href = `mailto:jsalz3120@gmail.com?subject=${encodeURIComponent('Project Inquiry — ' + (d.get('type')||'Designs by Salz'))}&body=${body}`;
+});
+</script>
+</body>
+</html>
