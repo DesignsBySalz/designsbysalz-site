@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How did I do? — Designs by Salz</title>
+<link rel="icon" href="../favicon.ico" sizes="any">
+<meta name="robots" content="noindex">
+<style>
+  :root { --mint:#3fe1d0; --mint-12:rgba(63,225,208,0.12); --mint-20:rgba(63,225,208,0.2); --mint-45:rgba(63,225,208,0.45); --w-60:rgba(255,255,255,0.6); --w-40:rgba(255,255,255,0.4); --head:"Avenir Next Condensed","Helvetica Neue","Arial Narrow",Arial,sans-serif; --body:"Avenir Next","Helvetica Neue",Helvetica,Arial,sans-serif; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#000; color:#fff; font-family:var(--body); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:30px 20px; }
+  ::selection { background:var(--mint); color:#000; }
+  .card { width:100%; max-width:560px; }
+  img.logo { height:44px; margin-bottom:22px; }
+  h1 { font-family:var(--head); font-weight:800; font-size:clamp(34px,6vw,56px); text-transform:uppercase; line-height:.95; }
+  h1 span { color:var(--mint); }
+  p.sub { color:var(--w-60); font-size:14px; line-height:1.7; margin:16px 0 34px; }
+  label { display:block; font-size:11px; letter-spacing:2.5px; color:var(--w-60); text-transform:uppercase; margin:26px 0 10px; }
+  .stars { display:flex; gap:8px; }
+  .stars button { background:none; border:1px solid rgba(255,255,255,0.15); color:var(--w-40); font-size:20px; width:52px; height:52px; cursor:pointer; transition:all .2s; }
+  .stars button.on { border-color:var(--mint); color:var(--mint); box-shadow:0 0 14px var(--mint-12); }
+  textarea, input[type=text] { width:100%; background:#050505; border:1px solid rgba(255,255,255,0.14); color:#fff; font-family:var(--body); font-size:14px; padding:14px; outline:none; }
+  textarea { min-height:110px; resize:vertical; }
+  textarea:focus, input:focus { border-color:var(--mint); box-shadow:0 0 14px var(--mint-12); }
+  .opts { display:flex; flex-wrap:wrap; gap:10px; }
+  .opt { border:1px solid rgba(255,255,255,0.15); color:var(--w-60); font-size:11px; letter-spacing:2px; padding:11px 16px; cursor:pointer; transition:all .2s; }
+  .opt.on { background:var(--mint); border-color:var(--mint); color:#000; font-weight:700; }
+  button.send { margin-top:34px; width:100%; background:var(--mint); border:none; color:#000; font-weight:700; font-size:13px; letter-spacing:3px; padding:17px; cursor:pointer; transition:box-shadow .25s; }
+  button.send:hover { box-shadow:0 0 28px var(--mint-45); }
+  .done { display:none; text-align:center; padding:60px 0; }
+  .done.on { display:block; }
+  .done h1 { font-size:clamp(40px,7vw,64px); }
+  .done p { color:var(--w-60); margin-top:14px; }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <img class="logo" src="../logo.png" alt="Designs by Salz">
+  <h1>HOW DID <span>I DO?</span></h1>
+  <p class="sub">Three quick questions — takes 30 seconds and makes the next project better.</p>
+  <form id="sf">
+    <input type="text" name="_honey" style="display:none" tabindex="-1">
+    <label>1 — How was the final graphic?</label>
+    <div class="stars" id="stars">
+      <button type="button" data-v="1">★</button><button type="button" data-v="2">★</button><button type="button" data-v="3">★</button><button type="button" data-v="4">★</button><button type="button" data-v="5">★</button>
+    </div>
+    <label>2 — What did you love (or what should I improve)?</label>
+    <textarea name="feedback" placeholder="Be honest — good or bad, it helps." required></textarea>
+    <label>3 — Can I share your words on my site?</label>
+    <div class="opts" id="perm">
+      <span class="opt" data-v="Yes, with my name">YES, WITH MY NAME</span>
+      <span class="opt" data-v="Yes, anonymously">YES, ANONYMOUSLY</span>
+      <span class="opt" data-v="No thanks">NO THANKS</span>
+    </div>
+    <label style="margin-top:22px">Your name <span style="color:var(--w-40)">(optional)</span></label>
+    <input type="text" name="name" placeholder="NAME / TEAM">
+    <button class="send" type="submit">SEND IT</button>
+  </form>
+</div>
+<div class="done" id="done">
+  <h1>APPRECIATE <span style="color:var(--mint)">YOU.</span></h1>
+  <p>Thanks for the feedback — it genuinely shapes what I build next.<br><br><a href="../" style="color:var(--mint)">← back to designsbysalz.net</a></p>
+</div>
+<script>
+let rating = 0, perm = '';
+document.getElementById('stars').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  rating = +b.dataset.v;
+  document.querySelectorAll('#stars button').forEach(x => x.classList.toggle('on', +x.dataset.v <= rating));
+});
+document.getElementById('perm').addEventListener('click', e => {
+  const o = e.target.closest('.opt'); if (!o) return;
+  perm = o.dataset.v;
+  document.querySelectorAll('#perm .opt').forEach(x => x.classList.toggle('on', x === o));
+});
+document.getElementById('sf').addEventListener('submit', async e => {
+  e.preventDefault();
+  const d = new FormData(e.target);
+  if (d.get('_honey')) return;
+  if (!rating) { alert('Tap a star rating first!'); return; }
+  const btn = e.target.querySelector('.send'); btn.disabled = true; btn.textContent = '…';
+  try {
+    const r = await fetch('https://formsubmit.co/ajax/jsalz3120@gmail.com', { method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body: JSON.stringify({ _subject:`Client survey — ${rating}★${d.get('name') ? ' from ' + d.get('name') : ''}`, _template:'table', rating: rating + ' / 5', feedback: d.get('feedback'), quote_permission: perm || 'not answered', name: d.get('name') || '-' }) });
+    if (!r.ok) throw 0;
+    document.getElementById('card').style.display = 'none';
+    document.getElementById('done').classList.add('on');
+  } catch { btn.disabled = false; btn.textContent = 'SEND IT'; alert('Sending failed — try again or email jsalz3120@gmail.com.'); }
+});
+</script>
+</body>
+</html>

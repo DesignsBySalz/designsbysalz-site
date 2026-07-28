@@ -898,7 +898,7 @@
   <div style="position:absolute;top:0;left:4vw;right:4vw"><div class="led-h led-delay1"></div></div>
   <div class="sec-label"><span class="tick"></span><span id="numJourney">—</span> / THE JOURNEY</div>
   <div class="sec-head-row">
-    <h2>FIRST EDIT TO <span class="m">188 PIECES.</span></h2>
+    <h2>FIRST EDIT TO <span class="m"><span class="dynN">186</span> PIECES.</span></h2>
   </div>
   <div class="tl-wrap">
     <div class="led-v led-slow tl-line"></div>
@@ -906,7 +906,7 @@
     <div class="tl-item reveal"><div class="tl-dot"></div><div class="tl-tag">THE DAILY GRIND</div><p>Design-a-day streaks across the NFL, MLB, NBA and college sports. Reps built the style: bold type, big moments, clean composition.</p></div>
     <div class="tl-item reveal"><div class="tl-dot"></div><div class="tl-tag">MILLBURN ATHLETICS</div><p>Running sports social media for my school — gamedays, wins, seniors, and championship nights for the Millers.</p></div>
     <div class="tl-item reveal"><div class="tl-dot"></div><div class="tl-tag">JULY 2026 — DESIGNSBYSALZ.NET</div><p>The full archive goes live on my own domain: a home for every graphic, photo, and concept.</p></div>
-    <div class="tl-item reveal"><div class="tl-dot"></div><div class="tl-tag">TODAY</div><p>188 original pieces across six sports — and booking new projects for athletes, teams, and programs.</p></div>
+    <div class="tl-item reveal"><div class="tl-dot"></div><div class="tl-tag">TODAY</div><p><span class="dynN">186</span> original pieces across six sports — and booking new projects for athletes, teams, and programs.</p></div>
   </div>
 </section>
 
@@ -1052,6 +1052,8 @@
       <a href="#work">WORK</a>
       <a href="booking/">BOOK</a>
       <a href="schools/">FOR SCHOOLS</a>
+      <a href="status/">PROJECT STATUS</a>
+      <a href="course/">COURSE</a>
       <a href="resume.pdf" download>RESUME</a>
       <a href="https://www.linkedin.com/in/jonah-salz-b10164388/" target="_blank" rel="noopener">LINKEDIN</a>
       <a href="https://www.instagram.com/designsbysalz/" target="_blank" rel="noopener">INSTAGRAM</a>
@@ -1073,6 +1075,7 @@
     <div class="lb-pal" id="lbPal" title="Click a color for print codes"></div>
     <div class="lb-codes" id="lbCodes" hidden></div>
     <div class="lb-actions">
+      <button class="lb-mini" id="lbFire" aria-label="Fire reaction">🔥 <span id="fireN"></span></button>
       <button class="lb-mini" id="lbFav" aria-label="Save to favorites">♡ SAVE</button>
       <button class="lb-mini" id="lbShare" aria-label="Copy link to this piece">⧉ COPY LINK</button>
     </div>
@@ -1576,6 +1579,36 @@ async function miniSubmit(form, subject, okMsg) {
 }
 document.getElementById('dropForm').addEventListener('submit', e => { e.preventDefault(); miniSubmit(e.target, 'Design Me Drop entry', 'YOU’RE IN THE DROP 🎨'); });
 document.getElementById('newsForm').addEventListener('submit', e => { e.preventDefault(); miniSubmit(e.target, 'Newsletter signup', 'SUBSCRIBED ✓'); });
+
+/* ---------- 🔥 reactions (shared counts via public counter; degrades gracefully) ---------- */
+const FIRE_NS = 'dbsalz-fire';
+const fireKey = f => { let h = 5381; for (const ch of f) h = ((h * 33) ^ ch.charCodeAt(0)) >>> 0; return 'p' + h.toString(36); };
+const firedSet = new Set(JSON.parse(localStorage.getItem('dbs_fired') || '[]'));
+async function loadFire() {
+  const a = clickList[idx]; if (!a) return;
+  const el = document.getElementById('fireN'), btn = document.getElementById('lbFire');
+  btn.classList.toggle('on', firedSet.has(a.f));
+  el.textContent = '';
+  try {
+    const r = await fetch(`https://api.counterapi.dev/v1/${FIRE_NS}/${fireKey(a.f)}`, { signal: AbortSignal.timeout(3500) });
+    if (r.ok) { const j = await r.json(); if (clickList[idx] === a && j.count > 0) el.textContent = j.count; }
+  } catch {}
+}
+document.getElementById('lbFire').onclick = async () => {
+  const a = clickList[idx], el = document.getElementById('fireN'), btn = document.getElementById('lbFire');
+  if (firedSet.has(a.f)) return;
+  firedSet.add(a.f); localStorage.setItem('dbs_fired', JSON.stringify([...firedSet]));
+  btn.classList.add('on');
+  el.textContent = (parseInt(el.textContent) || 0) + 1;
+  try { await fetch(`https://api.counterapi.dev/v1/${FIRE_NS}/${fireKey(a.f)}/up`, { signal: AbortSignal.timeout(3500) }); } catch {}
+  toast('🔥 NOTED');
+};
+const _showLB3 = showLB;
+showLB = function() { _showLB3(); loadFire(); };
+
+/* ---------- dynamic archive counts (never hardcode again) ---------- */
+document.querySelectorAll('.dynN').forEach(el => el.textContent = ARTWORKS.length);
+if (sInput) sInput.placeholder = `SEARCH ${ARTWORKS.length} PIECES — TRY 'BILLS', 'COMMIT', 'MICHIGAN'…`;
 
 openFromHash();
 </script>

@@ -168,7 +168,7 @@
 
   <div class="prog" id="progWrap">
     <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
-    <div class="prog-label"><span id="progText">STEP 1 OF 6 — SERVICES</span><span id="progPct">17%</span></div>
+    <div class="prog-label"><span id="progText">STEP 1 OF 6 — SERVICES</span><span><button type="button" id="saveDraft" style="background:none;border:none;color:var(--mint);font-size:10px;letter-spacing:2px;cursor:pointer;padding:0;margin-right:16px">💾 SAVE MY DRAFT</button><span id="progPct">17%</span></span></div>
   </div>
 
   <form id="bk" novalidate>
@@ -184,6 +184,7 @@
         <div class="scard" tabindex="0" data-svc="team"><div class="ic">⬡</div><h3>Team or School Package</h3><p>A collection of graphics for a team, school, season, or athletic program.</p></div>
         <div class="scard" tabindex="0" data-svc="photo"><div class="ic">◉</div><h3>Sports Photography</h3><p>Game coverage, events, portraits, media days, or athlete content.</p></div>
         <div class="scard" tabindex="0" data-svc="motion"><div class="ic">▶</div><h3>Motion Graphics or Video</h3><p>Animated graphics, short edits, social media videos, or promotional content.</p></div>
+        <div class="scard" tabindex="0" data-svc="bundle"><div class="ic">🎓</div><h3>Senior Bundle</h3><p>Poster + digital graphic + phone wallpaper for one athlete — one package, one price, confirmed on quote. Built for senior nights and graduation gifts.</p></div>
         <div class="scard" tabindex="0" data-svc="custom"><div class="ic">✦</div><h3>Custom Project</h3><p>A unique project that doesn't fit into one of the listed categories.</p></div>
       </div>
       <div class="errmsg" id="svcErr">Pick at least one service to continue.</div>
@@ -266,6 +267,16 @@
           <div><label>Graphic types needed</label><input name="team_types" placeholder="Gameday, results, seniors…"></div>
         </div>
       </div>
+      <div class="cond" data-cond="bundle"><h4>Senior bundle details</h4>
+        <div class="frow">
+          <div><label>Senior night / event date</label><input name="bundle_date" type="date"></div>
+          <div><label>School &amp; team</label><input name="bundle_school" placeholder="e.g. Millburn Soccer"></div>
+        </div>
+        <div class="frow">
+          <div><label>Poster size preference</label><select name="bundle_size"><option value="" selected>Not sure — recommend one</option><option>18×24"</option><option>24×36"</option><option>Digital only</option></select></div>
+          <div><label>Wallpapers needed</label><select name="bundle_walls"><option value="1" selected>1</option><option>2</option><option>Family pack (3+)</option></select></div>
+        </div>
+      </div>
       <div class="cond" data-cond="motion"><h4>Motion / video details</h4>
         <div class="frow">
           <div><label>Video length</label><input name="motion_length" placeholder="e.g. 15–30 seconds"></div>
@@ -286,8 +297,9 @@
       <div class="warn" id="rushWarn">⚡ That's a tight turnaround — rush pricing and availability may apply. I'll confirm whether it's possible before anything is locked in.</div>
       <div class="fgroup" style="margin-top:22px"><label>Turnaround</label>
         <div class="pills" data-pills="turnaround" data-single>
-          <span class="pill sel" tabindex="0">Standard</span><span class="pill" tabindex="0">Rush</span><span class="pill" tabindex="0">Not sure</span>
+          <span class="pill sel" tabindex="0">Standard</span><span class="pill" tabindex="0">⚡ Rush — priority lane</span><span class="pill" tabindex="0">Not sure</span>
         </div>
+        <div class="ex">Priority lane = your project jumps the queue. A rush fee applies and gets confirmed in your quote — no surprises.</div>
       </div>
       <div class="fgroup"><label>Estimated budget range</label>
         <div class="pills" data-pills="budget" data-single>
@@ -389,6 +401,7 @@ let step = 1;
 const state = { services: [], usage: [], turnaround: 'Standard', budget: 'Not sure yet' };
 let files = [];
 let dirty = false;
+let initialStep = 1;
 const SKEY = 'dbs_booking';
 
 /* ---------- restore saved progress ---------- */
@@ -522,7 +535,7 @@ function renderFiles() {
 }
 
 /* ---------- review ---------- */
-const SVCNAME = {graphics:'Sports Graphic Design',branding:'Athlete Branding',team:'Team or School Package',photo:'Sports Photography',motion:'Motion Graphics or Video',custom:'Custom Project'};
+const SVCNAME = {graphics:'Sports Graphic Design',branding:'Athlete Branding',team:'Team or School Package',photo:'Sports Photography',motion:'Motion Graphics or Video',bundle:'Senior Bundle (Poster + Digital + Wallpaper)',custom:'Custom Project'};
 function val(n) { return (form.elements[n]?.value || '').trim(); }
 function buildReview() {
   const rows = (pairs) => pairs.filter(([,v]) => v).map(([k,v]) => `<dt>${k}:</dt><dd>${v}</dd>`).join('');
@@ -610,7 +623,32 @@ $('#qcInput').addEventListener('change', () => {
   img.src = URL.createObjectURL(f);
 });
 
-go(1);
+/* ---------- save-my-draft: resume link in the URL, nothing stored on a server ---------- */
+document.getElementById('saveDraft').addEventListener('click', async () => {
+  const fields = {};
+  [...form.elements].forEach(el => { if (el.name && el.type !== 'file' && el.type !== 'checkbox' && el.value) fields[el.name] = el.value; });
+  const draft = btoa(unescape(encodeURIComponent(JSON.stringify({ s: state, f: fields, step }))));
+  const url = location.origin + location.pathname + '#draft=' + draft;
+  let copied = false;
+  try { await navigator.clipboard.writeText(url); copied = true; } catch {}
+  const mail = `mailto:?subject=${encodeURIComponent('My Designs by Salz booking draft')}&body=${encodeURIComponent('Open this link to finish your booking:\n\n' + url)}`;
+  if (confirm((copied ? 'Draft link copied to your clipboard! ' : '') + 'Want to email the link to yourself too?')) location.href = mail;
+});
+(() => {
+  const m = location.hash.match(/^#draft=(.+)$/);
+  if (!m) return;
+  try {
+    const d = JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    Object.assign(state, d.s || {});
+    for (const [k, v] of Object.entries(d.f || {})) { const el = form.elements[k]; if (el && el.type !== 'file') el.value = v; }
+    syncConds(); persist();
+    history.replaceState(null, '', location.pathname);
+    initialStep = d.step || 1;
+    setTimeout(() => alert('Welcome back — your draft is restored. Pick up right where you left off.'), 400);
+  } catch {}
+})();
+
+go(initialStep);
 </script>
 </body>
 </html>
