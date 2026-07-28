@@ -697,8 +697,11 @@
   #dotNav a:hover { transform: scale(1.35); }
   #dotNav a.on { background: var(--mint); box-shadow: 0 0 10px var(--mint-45); }
 
-  .nav-book { color: var(--mint) !important; font-weight: 700; border: 1px solid var(--mint-45); padding: 8px 14px !important; }
-  .nav-book:hover { background: var(--mint); color: #000 !important; box-shadow: 0 0 18px var(--mint-45); }
+  .nav-links a.nav-book { background: var(--mint); color: #000 !important; font-weight: 700; border: none; padding: 11px 20px; margin-left: 6px; letter-spacing: 2.5px; align-self: center; transition: box-shadow 0.25s, transform 0.25s; }
+  .nav-links a.nav-book::after, .nav-links a.nav-book::before { display: none; }
+  .nav-links a.nav-book:hover { color: #000 !important; box-shadow: 0 0 22px var(--mint-45); transform: translateY(-1px); }
+  .nav-links { align-items: center; }
+  @media (max-width: 820px) { .nav-links a.nav-book { padding: 8px 12px; letter-spacing: 1.5px; } }
   .nav-tool { background: none; border: none; color: var(--w-60); padding: 0; display: flex; cursor: pointer; position: relative; transition: color 0.25s, filter 0.25s; }
   .nav-tool:hover { color: var(--mint); filter: drop-shadow(0 0 7px var(--mint-45)); }
   .nav-tool svg { width: 17px; height: 17px; }
@@ -1050,7 +1053,7 @@
       <a href="booking/">BOOK</a>
       <a href="schools/">FOR SCHOOLS</a>
       <a href="resume.pdf" download>RESUME</a>
-      <a href="https://www.linkedin.com/feed/" target="_blank" rel="noopener">LINKEDIN</a>
+      <a href="https://www.linkedin.com/in/jonah-salz-b10164388/" target="_blank" rel="noopener">LINKEDIN</a>
       <a href="https://www.instagram.com/designsbysalz/" target="_blank" rel="noopener">INSTAGRAM</a>
       <a href="mailto:jsalz3120@gmail.com">EMAIL</a>
     </div>
