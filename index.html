@@ -4,7 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Designs by Salz — Sports Graphic Designer</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23000'/%3E%3Ctext x='32' y='44' font-family='Arial Black,Arial' font-size='30' font-style='italic' font-weight='900' fill='%233fe1d0' text-anchor='middle'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="description" content="Designs by Salz — bold sports graphics, athlete branding, commitment designs, and photography by Jonah Salz.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Designs by Salz">
+<meta property="og:title" content="Designs by Salz — Sports Graphic Designer">
+<meta property="og:description" content="Bold sports graphics, athlete branding, commitment designs, and photography. 188 original pieces.">
+<meta property="og:url" content="https://designsbysalz.net/">
+<meta property="og:image" content="https://designsbysalz.net/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Designs by Salz — Sports Graphic Designer">
+<meta name="twitter:description" content="Bold sports graphics, athlete branding, commitment designs, and photography.">
+<meta name="twitter:image" content="https://designsbysalz.net/og.jpg">
 <style>
   :root {
     --mint: #3fe1d0;
@@ -826,6 +841,7 @@
       <a class="btn btn-solid" href="mailto:jsalz3120@gmail.com?subject=Project%20Inquiry%20—%20Designs%20by%20Salz">START A PROJECT</a>
     </div>
     <form id="contactForm" class="reveal">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
       <div class="frow">
         <input type="text" name="name" placeholder="NAME" required>
         <input type="email" name="email" placeholder="EMAIL" required>
@@ -1099,12 +1115,36 @@ addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') { idx = (idx + 1) % clickList.length; showLB(); }
 });
 
-/* ---------- contact form -> mailto ---------- */
-document.getElementById('contactForm').addEventListener('submit', e => {
+/* ---------- contact form -> inbox delivery (FormSubmit), mailto fallback ---------- */
+document.getElementById('contactForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const d = new FormData(e.target);
-  const body = `Name: ${d.get('name')}%0AEmail: ${d.get('email')}%0AOrganization: ${d.get('org')||'-'}%0AProject type: ${d.get('type')||'-'}%0ADeadline: ${d.get('deadline')||'-'}%0A%0A${encodeURIComponent(d.get('details'))}`;
-  location.href = `mailto:jsalz3120@gmail.com?subject=${encodeURIComponent('Project Inquiry — ' + (d.get('type')||'Designs by Salz'))}&body=${body}`;
+  const form = e.target;
+  const d = new FormData(form);
+  if (d.get('_honey')) return; // bot trap
+  const btn = form.querySelector('button[type="submit"]');
+  const orig = btn.textContent;
+  btn.textContent = 'SENDING…'; btn.disabled = true;
+  try {
+    const res = await fetch('https://formsubmit.co/ajax/jsalz3120@gmail.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        name: d.get('name'), email: d.get('email'),
+        organization: d.get('org') || '-', project_type: d.get('type') || '-',
+        deadline: d.get('deadline') || '-', details: d.get('details'),
+        _subject: 'Project Inquiry — ' + (d.get('type') || 'Designs by Salz'),
+        _template: 'table'
+      })
+    });
+    if (!res.ok) throw new Error('send failed');
+    btn.textContent = 'MESSAGE SENT ✓';
+    form.reset();
+    setTimeout(() => { btn.textContent = orig; btn.disabled = false; }, 6000);
+  } catch (err) {
+    btn.textContent = orig; btn.disabled = false;
+    const body = `Name: ${d.get('name')}%0AEmail: ${d.get('email')}%0AOrganization: ${d.get('org')||'-'}%0AProject type: ${d.get('type')||'-'}%0ADeadline: ${d.get('deadline')||'-'}%0A%0A${encodeURIComponent(d.get('details'))}`;
+    location.href = `mailto:jsalz3120@gmail.com?subject=${encodeURIComponent('Project Inquiry — ' + (d.get('type')||'Designs by Salz'))}&body=${body}`;
+  }
 });
 </script>
 </body>
