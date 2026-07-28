@@ -962,6 +962,50 @@
     @keyframes progGrow { from { width: 0%; } to { width: 100%; } }
   }
 
+  /* ============ V6: GAME-DAY PACK ============ */
+  /* pinch-zoom lightbox */
+  #lbImg { touch-action: none; transition: transform .18s ease-out; will-change: transform; }
+  .lightbox.zooming #lbImg { transition: none; }
+
+  /* tunnel floor spotlights */
+  .tun-panel .spot { position:absolute; top:100%; width:34%; height:210px; pointer-events:none; opacity:.8; clip-path: polygon(8% 0, 92% 0, 58% 100%, 42% 100%); background: linear-gradient(to bottom, var(--spot, rgba(63,225,208,0.34)), transparent 92%); filter: blur(2px); animation: spotFlicker 4.2s ease-in-out infinite; }
+  .tun-panel .spot.l { left:6%; transform: skewX(7deg); }
+  .tun-panel .spot.r { right:6%; transform: skewX(-7deg); animation-delay: 1.6s; }
+  .tun-panel .spot-base { position:absolute; top:calc(100% + 196px); left:50%; transform: translateX(-50%); width:78%; height:26px; border-radius:50%; background: radial-gradient(ellipse, var(--spot, rgba(63,225,208,0.4)) 0%, transparent 70%); filter: blur(4px); pointer-events:none; }
+  @keyframes spotFlicker { 0%,100% { opacity:.8; } 50% { opacity:.55; } 74% { opacity:.72; } }
+
+  /* broadcast score bug */
+  #scoreBug { position:fixed; left:18px; bottom:18px; z-index:260; display:flex; align-items:stretch; font-family:var(--head); font-size:11px; letter-spacing:2px; opacity:0; transform:translateY(16px); transition:opacity .4s, transform .4s; pointer-events:none; }
+  #scoreBug.on { opacity:1; transform:none; }
+  #scoreBug .bug-l { background:var(--mint); color:#000; font-weight:800; padding:8px 10px; display:flex; align-items:center; }
+  #scoreBug .bug-r { background:rgba(6,6,6,0.92); border:1px solid var(--mint-20); border-left:none; color:var(--w-60); padding:8px 12px; display:flex; align-items:center; gap:8px; backdrop-filter:blur(6px); }
+  #scoreBug .bug-r b { color:#fff; font-weight:700; }
+  @media (max-width:700px) { #scoreBug { display:none; } }
+
+  /* rivalry flip */
+  .ohio-flip { transform: rotate(180deg) !important; transition: transform .6s cubic-bezier(.3,1.4,.4,1) !important; }
+
+  /* confetti bits */
+  .confetti-bit { position:absolute; width:9px; height:13px; top:38%; left:50%; pointer-events:none; z-index:5; }
+
+  /* section anchor links */
+  section h2 .anchor-btn { display:inline-block; margin-left:14px; background:none; border:none; color:var(--mint-45); font-size:.45em; cursor:pointer; opacity:0; transition:opacity .25s, color .25s; vertical-align:middle; font-family:var(--body); }
+  section h2:hover .anchor-btn, section h2 .anchor-btn:focus-visible { opacity:1; }
+  section h2 .anchor-btn:hover { color:var(--mint); }
+
+  /* last-viewed dock */
+  #lastDock { position:fixed; left:18px; bottom:64px; z-index:259; display:none; align-items:center; gap:0; border:1px solid var(--mint-45); background:rgba(0,0,0,0.88); backdrop-filter:blur(8px); padding:5px; cursor:pointer; transition:box-shadow .25s, transform .25s; }
+  #lastDock.on { display:flex; animation: dockIn .4s cubic-bezier(.3,1.5,.4,1); }
+  #lastDock:hover { box-shadow:0 0 22px var(--mint-20); transform:translateY(-2px); }
+  #lastDock img { width:46px; height:58px; object-fit:cover; display:block; }
+  #lastDock .dk-t { max-width:120px; padding:0 10px; font-size:9px; letter-spacing:1.5px; color:var(--w-60); line-height:1.5; overflow:hidden; }
+  #lastDock .dk-x { background:none; border:none; color:var(--w-40); font-size:12px; padding:6px; cursor:pointer; }
+  #lastDock .dk-x:hover { color:#fff; }
+  @keyframes dockIn { from { opacity:0; transform:translateY(20px); } }
+  @media (max-width:700px) { #lastDock .dk-t { display:none; } #lastDock { bottom:18px; } }
+
+  /* returning client banner (booking uses its own styles) */
+
   /* ============ RESPONSIVE ============ */
   @media (max-width: 1100px) {
     .hero-collage { display: none; }
@@ -1069,7 +1113,7 @@
   <div class="sec-label"><span class="tick"></span>01 / FEATURED PROJECTS</div>
   <div class="sec-head-row">
     <h2>MY <span class="m">WORK</span></h2>
-    <div class="sec-count" style="display:flex;align-items:center;gap:22px"><span><b id="totalCount">–</b> ORIGINAL PIECES</span><button class="tunnel-btn" id="tunnelBtn">▶ ENTER THE TUNNEL</button></div>
+    <div class="sec-count" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><span><b id="totalCount">–</b> ORIGINAL PIECES</span><button class="tunnel-btn" id="tunnelBtn">▶ ENTER THE TUNNEL</button><button class="tunnel-btn" id="playBtn" aria-label="Play slideshow of all pieces">▶ PLAY ALL</button></div>
   </div>
   <div class="chip-row" id="chipRow" role="group" aria-label="Filter archive by type">
     <button class="fchip on" data-f="all">ALL</button>
@@ -1318,6 +1362,9 @@
   <div class="tun-scene"><div class="tun-floor"></div><div class="tun-track" id="tunTrack"></div></div>
   <div class="tun-hud"><span class="tun-hint">SCROLL / DRAG TO WALK</span><div class="tun-bar"><div id="tunProg"></div></div><span class="tun-hint" id="tunN">1 / 10</span></div>
 </div>
+
+<div id="scoreBug" aria-hidden="true"><span class="bug-l">DBS</span><span class="bug-r"><span id="bugSec">HOME</span><b id="bugCount"></b></span></div>
+<div id="lastDock" role="button" aria-label="Reopen last viewed piece"><img alt=""><span class="dk-t"></span><button class="dk-x" aria-label="Dismiss">✕</button></div>
 
 <div id="curtain" aria-hidden="true"><div class="wipe"></div><div class="beam"></div></div>
 <div id="leaveOv" aria-hidden="true"><img src="logo.png" alt=""></div>
@@ -2237,6 +2284,217 @@ document.querySelectorAll('#tunTrack .tun-panel').forEach((p, i) => {
   const up = () => ck.textContent = 'MILLBURN, NJ — ' + new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit' });
   up(); setInterval(up, 15000);
 })();
+</script>
+<script>
+/* ================= V6: GAME-DAY PACK ================= */
+const sndOn = () => localStorage.getItem('dbs_snd') === '1';
+
+/* ---- 1. pinch-zoom lightbox (+ ctrl-wheel on desktop) ---- */
+(() => {
+  const img = document.getElementById('lbImg');
+  const ptrs = new Map();
+  let scale = 1, tx = 0, ty = 0, startDist = 0, startScale = 1, lastX = 0, lastY = 0;
+  const apply = () => {
+    const m = (scale - 1) * 140;
+    tx = Math.max(-m * 2, Math.min(m * 2, tx)); ty = Math.max(-m * 1.5, Math.min(m * 1.5, ty));
+    img.style.transform = scale > 1.01 ? `translate(${tx}px, ${ty}px) scale(${scale})` : '';
+  };
+  const reset = () => { scale = 1; tx = ty = 0; img.style.transform = ''; };
+  img.addEventListener('pointerdown', e => { ptrs.set(e.pointerId, e); img.setPointerCapture(e.pointerId);
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; startDist = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY); startScale = scale; lb.classList.add('zooming'); }
+    else { lastX = e.clientX; lastY = e.clientY; }
+  });
+  img.addEventListener('pointermove', e => {
+    if (!ptrs.has(e.pointerId)) return;
+    ptrs.set(e.pointerId, e);
+    if (ptrs.size === 2) {
+      const [a, b] = [...ptrs.values()];
+      scale = Math.max(1, Math.min(2.6, startScale * Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) / startDist));
+      apply();
+    } else if (scale > 1.01) {
+      tx += e.clientX - lastX; ty += e.clientY - lastY; lastX = e.clientX; lastY = e.clientY; apply();
+    }
+  });
+  const up = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) { lb.classList.remove('zooming'); if (scale <= 1.05) reset(); } };
+  img.addEventListener('pointerup', up); img.addEventListener('pointercancel', up);
+  lb.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); scale = Math.max(1, Math.min(2.6, scale - e.deltaY * 0.01)); apply(); }, { passive: false });
+  const _sZ = showLB; showLB = function() { reset(); _sZ(); };
+  const _cZ = closeLB; closeLB = function() { reset(); _cZ(); };
+})();
+
+/* ---- 2. tunnel floor spotlights (two cones per panel) ---- */
+document.querySelectorAll('#tunTrack .tun-panel').forEach((p, i) => {
+  const a = featured[i]; if (!a || !p.querySelector('img')) return;
+  const t = bestTint(a.f);
+  if (t) p.style.setProperty('--spot', t + '52');
+  ['l', 'r'].forEach(side => { const s = document.createElement('div'); s.className = 'spot ' + side; p.appendChild(s); });
+  const base = document.createElement('div'); base.className = 'spot-base'; p.appendChild(base);
+});
+
+/* ---- 3. Play All slideshow ---- */
+(() => {
+  let timer = null;
+  const btn = document.getElementById('playBtn');
+  const lbBtn = document.createElement('button');
+  lbBtn.className = 'lb-mini'; lbBtn.id = 'lbPlay'; lbBtn.textContent = '▶ PLAY';
+  document.querySelector('.lb-actions').appendChild(lbBtn);
+  const stop = () => { if (!timer) return; clearInterval(timer); timer = null; lbBtn.textContent = '▶ PLAY'; lbBtn.classList.remove('on'); };
+  const start = () => {
+    if (!lb.classList.contains('open')) openLB(0);
+    stop();
+    timer = setInterval(() => { idx = (idx + 1) % clickList.length; showLB(); }, 4000);
+    lbBtn.textContent = '❚❚ PAUSE'; lbBtn.classList.add('on');
+  };
+  btn.addEventListener('click', start);
+  lbBtn.addEventListener('click', e => { e.stopPropagation(); timer ? stop() : start(); });
+  ['lbPrev', 'lbNext', 'lbX'].forEach(id => document.getElementById(id).addEventListener('click', stop));
+  addEventListener('keydown', e => { if (['ArrowLeft', 'ArrowRight', 'Escape'].includes(e.key)) stop(); });
+  const _cP = closeLB; closeLB = function() { stop(); _cP(); };
+})();
+
+/* ---- 4. jersey-number search ---- */
+(() => {
+  const _rs = renderSearch;
+  renderSearch = q => {
+    const m = q.trim().match(/^#?(\d{1,2})$/);
+    if (!m) return _rs(q);
+    const re = new RegExp('(^|[^0-9])' + m[1] + '([^0-9]|$)');
+    sGrid.innerHTML = '';
+    const hits = ARTWORKS.filter(a => re.test(a.t + ' ' + (a.s || '') + ' ' + a.f));
+    hits.slice(0, 60).forEach(a => sGrid.appendChild(cardFor(a, () => { searchOv.hidden = true; document.body.style.overflow = ''; openLB(clickList.indexOf(a)); })));
+    if (!hits.length) sGrid.innerHTML = '<p class="ov-empty">No #' + m[1] + ' pieces found — try a team or player name.</p>';
+  };
+})();
+
+/* ---- 5. broadcast score bug ---- */
+(() => {
+  const bug = document.getElementById('scoreBug');
+  document.getElementById('bugCount').textContent = ' · ' + ARTWORKS.length + ' PIECES';
+  const NAMES = { top: 'KICKOFF', work: 'FEATURED', beforeafter: 'THE GRADE', wild: 'IN THE WILD', journey: 'THE JOURNEY', about: 'THE DESIGNER', services: 'SERVICES', process: 'THE PROCESS', extras: 'THE DROP', };
+  const spy = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return;
+    const id = en.target.id;
+    document.getElementById('bugSec').textContent = NAMES[id] || (id.startsWith('cat-') ? id.slice(4).toUpperCase() : id.toUpperCase());
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('section[id], header#top').forEach(s => spy.observe(s));
+  addEventListener('scroll', () => bug.classList.toggle('on', scrollY > 500), { passive: true });
+})();
+
+/* ---- 6. rivalry easter egg ---- */
+(() => {
+  let buf = '';
+  const isMich = a => /michigan|wolverine|go blue|harbaugh|underwood/i.test(a.t + ' ' + (a.s || ''));
+  addEventListener('keydown', e => {
+    if (e.target.closest('input, textarea, select')) return;
+    if (e.key.length !== 1) return;
+    buf = (buf + e.key.toLowerCase()).slice(-8);
+    if (buf.endsWith('ohio')) {
+      buf = '';
+      const els = [];
+      domFor.forEach((el, f) => { const a = ARTWORKS.find(x => x.f === f); if (a && isMich(a)) els.push(el); });
+      if (!els.length) return;
+      els.forEach(el => el.classList.add('ohio-flip'));
+      toast('THAT\'S NOT HOW YOU SPELL MICHIGAN 〽️');
+      setTimeout(() => els.forEach(el => el.classList.remove('ohio-flip')), 5000);
+    }
+  });
+})();
+
+/* ---- 7. championship confetti ---- */
+(() => {
+  const popped = new Set();
+  const isChamp = a => /champ|cup final|mcmullen|title/i.test(a.t + ' ' + (a.s || ''));
+  const _sC = showLB;
+  showLB = function() {
+    _sC();
+    const a = clickList[idx];
+    if (!a || !isChamp(a) || popped.has(a.f) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    popped.add(a.f);
+    const colors = [bestTint(a.f) || '#3fe1d0', '#FFD700', '#ffffff', '#3fe1d0'];
+    for (let i = 0; i < 44; i++) {
+      const bit = document.createElement('div');
+      bit.className = 'confetti-bit';
+      bit.style.background = colors[i % colors.length];
+      lb.appendChild(bit);
+      const dx = (Math.random() - 0.5) * 640, rise = 90 + Math.random() * 220, fall = 280 + Math.random() * 180;
+      bit.animate([
+        { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+        { transform: `translate(${dx * 0.6}px, ${-rise}px) rotate(${180 + Math.random() * 180}deg)`, opacity: 1, offset: 0.35 },
+        { transform: `translate(${dx}px, ${fall}px) rotate(${540 + Math.random() * 360}deg)`, opacity: 0 }
+      ], { duration: 1900 + Math.random() * 900, easing: 'cubic-bezier(.2,.6,.4,1)' }).onfinish = () => bit.remove();
+    }
+  };
+})();
+
+/* ---- 8. whistle on tunnel entry ---- */
+document.getElementById('tunnelBtn').addEventListener('click', () => {
+  if (!sndOn()) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const blow = (t0, dur) => {
+      const o = ctx.createOscillator(), lfo = ctx.createOscillator(), lg = ctx.createGain(), g = ctx.createGain();
+      o.type = 'square'; o.frequency.value = 2850;
+      lfo.frequency.value = 38; lg.gain.value = 220; lfo.connect(lg).connect(o.frequency);
+      g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.06, t0 + 0.015);
+      g.gain.setValueAtTime(0.06, t0 + dur - 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g).connect(ctx.destination);
+      o.start(t0); lfo.start(t0); o.stop(t0 + dur); lfo.stop(t0 + dur);
+    };
+    blow(ctx.currentTime, 0.22); blow(ctx.currentTime + 0.3, 0.4);
+  } catch {}
+});
+
+/* ---- 10. section anchor links ---- */
+document.querySelectorAll('section[id] h2').forEach(h => {
+  const sec = h.closest('section[id]'); if (!sec || sec.closest('.invert')) return;
+  const b = document.createElement('button');
+  b.className = 'anchor-btn'; b.textContent = '¶'; b.type = 'button';
+  b.setAttribute('aria-label', 'Copy link to this section');
+  b.onclick = async e => { e.stopPropagation(); const url = location.origin + location.pathname + '#' + sec.id; try { await navigator.clipboard.writeText(url); toast('SECTION LINK COPIED'); } catch { prompt('Copy:', url); } };
+  h.appendChild(b);
+});
+
+/* ---- 11. last-viewed dock ---- */
+(() => {
+  const dock = document.getElementById('lastDock');
+  let lastA = null;
+  const _cD = closeLB;
+  closeLB = function() {
+    lastA = clickList[idx];
+    _cD();
+    if (!lastA) return;
+    dock.querySelector('img').src = prevSrc(lastA);
+    dock.querySelector('.dk-t').textContent = lastA.t.toUpperCase().slice(0, 34);
+    dock.classList.add('on');
+  };
+  dock.addEventListener('click', e => {
+    if (e.target.closest('.dk-x')) { dock.classList.remove('on'); return; }
+    if (lastA) { dock.classList.remove('on'); openLB(clickList.indexOf(lastA)); }
+  });
+  const _oD = openLB; openLB = function(i) { dock.classList.remove('on'); _oD(i); };
+})();
+
+/* ---- 12. seasonal favicon ---- */
+(() => {
+  const mo = new Date().getMonth();
+  const badge = mo === 11 ? '❄️' : mo === 2 ? '🏀' : (mo === 0 ? '🏆' : null);
+  if (!badge) return;
+  const base = new Image();
+  base.onload = () => {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const g = c.getContext('2d');
+    g.fillStyle = '#000'; g.fillRect(0, 0, 64, 64);
+    g.drawImage(base, 4, 4, 56, 56);
+    g.font = '26px serif'; g.textAlign = 'right'; g.textBaseline = 'bottom';
+    g.fillText(badge, 64, 66);
+    let link = document.querySelector('link[rel="icon"]');
+    link.href = c.toDataURL('image/png');
+  };
+  base.src = 'favicon-48.png';
+})();
+
+/* ---- 13. offline fallback service worker ---- */
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
 </html>
