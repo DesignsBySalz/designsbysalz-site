@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Fumble | Designs by Salz</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<style>
+  :root { --mint:#3fe1d0; --mint-20:rgba(63,225,208,0.2); --mint-45:rgba(63,225,208,0.45); --head:"Avenir Next Condensed","Helvetica Neue","Arial Narrow",Arial,sans-serif; --body:"Avenir Next","Helvetica Neue",Helvetica,Arial,sans-serif; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#000; color:#fff; font-family:var(--body); min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px; overflow:hidden; }
+  .big { font-family:var(--head); font-weight:800; font-size:clamp(120px,28vw,320px); line-height:.9; color:transparent; -webkit-text-stroke:2px var(--mint); text-stroke:2px var(--mint); filter:drop-shadow(0 0 30px rgba(63,225,208,0.25)); animation:shake 3.2s ease-in-out infinite; }
+  @keyframes shake { 0%,100%{transform:rotate(0)} 46%{transform:rotate(0)} 48%{transform:rotate(-2.5deg)} 50%{transform:rotate(2deg)} 52%{transform:rotate(-1deg)} 54%{transform:rotate(0)} }
+  h1 { font-family:var(--head); font-weight:800; font-size:clamp(28px,6vw,54px); text-transform:uppercase; margin:22px 0 10px; }
+  h1 span { color:var(--mint); }
+  p { color:rgba(255,255,255,0.6); font-size:15px; line-height:1.7; max-width:440px; }
+  .btns { display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; justify-content:center; }
+  a.btn { font-size:12px; letter-spacing:3px; padding:15px 30px; text-decoration:none; color:#fff; border:1px solid var(--mint-45); transition:all .3s; }
+  a.btn:hover { border-color:var(--mint); box-shadow:0 0 22px var(--mint-20); }
+  a.btn.solid { background:var(--mint); color:#000; font-weight:600; }
+  .ball { font-size:40px; margin-bottom:10px; display:inline-block; animation:bounce 2.2s cubic-bezier(.3,1.6,.6,1) infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0) rotate(-8deg)} 50%{transform:translateY(-22px) rotate(10deg)} }
+  @media (prefers-reduced-motion:reduce){ .big,.ball{animation:none} }
+</style>
+</head>
+<body>
+  <span class="ball">🏈</span>
+  <div class="big">404</div>
+  <h1>FUMBLE. <span>PAGE LOST.</span></h1>
+  <p>That link got stripped at the goal line — the page you're looking for doesn't exist, moved, or never made the roster.</p>
+  <div class="btns">
+    <a class="btn solid" href="/">RECOVER THE BALL → HOME</a>
+    <a class="btn" href="/#work">VIEW THE WORK</a>
+    <a class="btn" href="/booking/">BOOK A PROJECT</a>
+  </div>
+</body>
+</html>

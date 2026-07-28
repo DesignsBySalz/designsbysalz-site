@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Project — Designs by Salz</title>
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="description" content="Book sports graphics, athlete branding, team packages, photography, or motion work with Designs by Salz.">
+<meta property="og:title" content="Book a Project — Designs by Salz">
+<meta property="og:description" content="Tell me about your athlete, team, event, or idea — I'll confirm availability and next steps.">
+<meta property="og:image" content="https://designsbysalz.net/og.jpg">
+<meta property="og:url" content="https://designsbysalz.net/booking/">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root { --mint:#3fe1d0; --mint-12:rgba(63,225,208,0.12); --mint-20:rgba(63,225,208,0.20); --mint-45:rgba(63,225,208,0.45); --black:#000; --white:#fff; --w-60:rgba(255,255,255,0.6); --w-40:rgba(255,255,255,0.4); --head:"Avenir Next Condensed","Helvetica Neue","Arial Narrow",Arial,sans-serif; --body:"Avenir Next","Helvetica Neue",Helvetica,Arial,sans-serif; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--black); color:var(--white); font-family:var(--body); -webkit-font-smoothing:antialiased; }
+  ::selection { background:var(--mint); color:#000; }
+  a { color:inherit; }
+  .led-h { position:relative; height:1px; width:100%; background:var(--mint-12); overflow:hidden; }
+  .led-h::after { content:''; position:absolute; top:-1.5px; left:-18%; width:15%; height:4px; border-radius:4px; background:linear-gradient(90deg,transparent,rgba(63,225,208,0.35) 55%,var(--mint) 88%,#eafffb); box-shadow:0 0 8px 1px var(--mint-45); animation:ledH 6s linear infinite; }
+  @keyframes ledH { to { left:118%; } }
+  @media (prefers-reduced-motion:reduce){ .led-h::after{animation:none!important} html{scroll-behavior:auto} }
+  nav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; justify-content:space-between; align-items:center; padding:16px 4vw; background:rgba(0,0,0,0.88); backdrop-filter:blur(12px); border-bottom:1px solid var(--mint-12); }
+  .brand { font-family:var(--head); font-weight:700; font-size:16px; letter-spacing:3px; text-decoration:none; display:flex; align-items:center; gap:12px; }
+  .brand em { font-style:normal; color:var(--mint); }
+  .brand img { height:28px; }
+  .nav-links { display:flex; gap:26px; }
+  .nav-links a { text-decoration:none; font-size:11px; letter-spacing:2.5px; color:var(--w-60); transition:color .25s; }
+  .nav-links a:hover { color:var(--mint); }
+  main { max-width:980px; margin:0 auto; padding:150px 5vw 80px; }
+  h1 { font-family:var(--head); font-weight:800; font-size:clamp(48px,8vw,110px); line-height:.92; text-transform:uppercase; }
+  h1 .m { color:var(--mint); text-shadow:0 0 45px var(--mint-20); }
+  .sub { color:var(--w-60); font-size:16px; line-height:1.75; max-width:560px; margin:26px 0; }
+  .avail { display:inline-flex; align-items:center; gap:10px; font-size:11px; letter-spacing:3px; color:var(--mint); border:1px solid var(--mint-20); padding:10px 16px; }
+  .avail .dot { width:8px; height:8px; border-radius:50%; background:var(--mint); box-shadow:0 0 10px var(--mint); animation:pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity:.35; } }
+  .howto { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin:44px 0 0; }
+  .howto div { border:1px solid rgba(255,255,255,0.08); padding:16px; font-size:11px; letter-spacing:2px; color:var(--w-60); }
+  .howto b { display:block; color:var(--mint); font-family:var(--head); font-size:15px; letter-spacing:2px; margin-bottom:6px; }
+  /* progress */
+  .prog { margin:60px 0 26px; }
+  .prog-track { height:2px; background:var(--mint-12); position:relative; }
+  .prog-fill { position:absolute; inset:0 auto 0 0; width:0; background:linear-gradient(90deg,rgba(63,225,208,.3),var(--mint)); box-shadow:0 0 10px var(--mint-45); transition:width .4s; }
+  .prog-label { display:flex; justify-content:space-between; font-size:10px; letter-spacing:2.5px; color:var(--w-40); margin-top:10px; text-transform:uppercase; }
+  /* steps */
+  .step-panel { display:none; animation:stepIn .35s ease; }
+  .step-panel.on { display:block; }
+  @keyframes stepIn { from { opacity:0; transform:translateY(16px); } }
+  h2 { font-family:var(--head); font-weight:800; font-size:clamp(26px,4vw,44px); text-transform:uppercase; letter-spacing:.5px; margin:24px 0 8px; }
+  .hint { color:var(--w-40); font-size:13px; line-height:1.6; margin-bottom:26px; }
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; }
+  .scard { border:1px solid rgba(255,255,255,0.1); background:#050505; padding:26px 22px; cursor:pointer; transition:all .25s; position:relative; }
+  .scard:hover { border-color:var(--mint-45); transform:translateY(-3px); }
+  .scard.sel { border-color:var(--mint); box-shadow:0 0 24px var(--mint-12); background:#031311; }
+  .scard.sel::after { content:'✓'; position:absolute; top:14px; right:16px; color:var(--mint); font-weight:700; }
+  .scard .ic { color:var(--mint); font-size:22px; margin-bottom:12px; }
+  .scard h3 { font-family:var(--head); font-weight:800; font-size:19px; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  .scard p { color:var(--w-60); font-size:13px; line-height:1.6; }
+  /* fields */
+  .frow { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  .fcol { display:flex; flex-direction:column; gap:14px; }
+  label { display:block; font-size:10px; letter-spacing:2.5px; color:var(--w-60); margin:0 0 7px; text-transform:uppercase; }
+  label .req { color:var(--mint); }
+  label .opt { color:var(--w-40); }
+  .ex { font-size:11px; color:var(--w-40); margin-top:6px; line-height:1.5; }
+  input, textarea, select { background:#050505; border:1px solid rgba(255,255,255,0.12); color:#fff; font-family:var(--body); font-size:14px; padding:14px 15px; outline:none; width:100%; border-radius:0; -webkit-appearance:none; transition:border-color .25s, box-shadow .25s; }
+  input:focus, textarea:focus, select:focus { border-color:var(--mint); box-shadow:0 0 14px var(--mint-12); }
+  input.err, textarea.err, select.err { border-color:#ff5a5a; }
+  .errmsg { color:#ff8080; font-size:11px; letter-spacing:1px; margin-top:6px; display:none; }
+  .errmsg.show { display:block; }
+  textarea { min-height:120px; resize:vertical; }
+  select { color:var(--w-60); }
+  ::placeholder { color:rgba(255,255,255,0.28); letter-spacing:1px; }
+  .pills { display:flex; flex-wrap:wrap; gap:10px; }
+  .pill { border:1px solid rgba(255,255,255,0.14); color:var(--w-60); font-size:11px; letter-spacing:2px; padding:10px 16px; cursor:pointer; transition:all .2s; user-select:none; }
+  .pill:hover { border-color:var(--mint-45); }
+  .pill.sel { background:var(--mint); border-color:var(--mint); color:#000; font-weight:700; }
+  .fgroup { margin-bottom:22px; }
+  .cond { border-left:2px solid var(--mint-20); padding-left:18px; margin:26px 0; display:none; }
+  .cond.on { display:block; }
+  .cond h4 { font-family:var(--head); font-size:16px; letter-spacing:2px; color:var(--mint); text-transform:uppercase; margin-bottom:16px; }
+  .warn { border:1px solid rgba(255,170,60,0.5); background:rgba(255,170,60,0.06); color:#ffc37a; font-size:12.5px; letter-spacing:.5px; line-height:1.6; padding:14px 16px; margin-top:12px; display:none; }
+  .warn.show { display:block; }
+  .note { border:1px solid var(--mint-20); background:rgba(63,225,208,0.04); color:var(--w-60); font-size:12.5px; line-height:1.6; padding:14px 16px; margin-top:16px; }
+  /* files */
+  .dropzone { border:1px dashed var(--mint-45); background:#030d0b; padding:44px 20px; text-align:center; cursor:pointer; transition:all .25s; }
+  .dropzone.drag { background:#06231e; border-color:var(--mint); box-shadow:0 0 30px var(--mint-12); }
+  .dropzone p { color:var(--w-60); font-size:13px; letter-spacing:1px; }
+  .dropzone b { color:var(--mint); }
+  .flist { display:flex; flex-direction:column; gap:8px; margin-top:14px; }
+  .fitem { display:flex; align-items:center; gap:12px; border:1px solid rgba(255,255,255,0.1); padding:9px 12px; font-size:12px; }
+  .fitem img { width:38px; height:38px; object-fit:cover; }
+  .fitem .fx { margin-left:auto; background:none; border:1px solid rgba(255,255,255,0.2); color:var(--w-60); width:26px; height:26px; cursor:pointer; }
+  .fitem .fx:hover { border-color:#ff5a5a; color:#ff5a5a; }
+  /* review */
+  .rev { border:1px solid rgba(255,255,255,0.1); }
+  .rev-sec { padding:18px 20px; border-bottom:1px solid rgba(255,255,255,0.07); }
+  .rev-sec h4 { font-family:var(--head); font-size:14px; letter-spacing:2.5px; color:var(--mint); text-transform:uppercase; display:flex; justify-content:space-between; align-items:center; }
+  .rev-sec h4 button { background:none; border:none; color:var(--w-40); font-size:10px; letter-spacing:2px; cursor:pointer; }
+  .rev-sec h4 button:hover { color:var(--mint); }
+  .rev-sec dl { margin-top:10px; font-size:13px; line-height:1.9; }
+  .rev-sec dt { color:var(--w-40); display:inline; }
+  .rev-sec dd { display:inline; margin:0 14px 0 6px; color:#fff; }
+  .checks { margin:26px 0; display:flex; flex-direction:column; gap:14px; }
+  .checks label { display:flex; gap:12px; align-items:flex-start; font-size:12.5px; letter-spacing:.5px; color:var(--w-60); text-transform:none; cursor:pointer; }
+  .checks input { width:18px; height:18px; accent-color:var(--mint); flex:none; margin-top:1px; }
+  /* buttons */
+  .btnrow { display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
+  .btn { font-size:13px; letter-spacing:3px; padding:16px 32px; cursor:pointer; text-decoration:none; display:inline-block; transition:all .3s; border:none; font-family:var(--body); }
+  .btn-solid { background:var(--mint); color:#000; font-weight:600; border:1px solid var(--mint); }
+  .btn-solid:hover:not(:disabled) { box-shadow:0 0 32px var(--mint-45); transform:translateY(-2px); }
+  .btn-solid:disabled { opacity:.5; cursor:wait; }
+  .btn-ghost { background:transparent; color:#fff; border:1px solid var(--mint-45); }
+  .btn-ghost:hover { border-color:var(--mint); box-shadow:0 0 22px var(--mint-20); }
+  /* confirmation */
+  #confirm { text-align:center; padding:60px 0; display:none; }
+  #confirm.on { display:block; }
+  #confirm .big { font-family:var(--head); font-weight:800; font-size:clamp(44px,7vw,90px); text-transform:uppercase; }
+  #confirm .ref { color:var(--mint); font-size:13px; letter-spacing:3px; margin:20px 0; }
+  #confirm .summ { display:inline-block; text-align:left; border:1px solid var(--mint-20); padding:22px 28px; margin:20px 0; font-size:14px; line-height:2; }
+  /* faq */
+  .faq { margin-top:90px; }
+  .acc { border-bottom:1px solid rgba(255,255,255,0.08); }
+  .acc button.q { width:100%; background:none; border:none; color:#fff; font-family:var(--head); font-size:17px; letter-spacing:1px; text-transform:uppercase; text-align:left; padding:20px 40px 20px 0; cursor:pointer; position:relative; }
+  .acc button.q::after { content:'+'; position:absolute; right:6px; color:var(--mint); font-size:22px; transition:transform .25s; }
+  .acc.open button.q::after { transform:rotate(45deg); }
+  .acc .a { max-height:0; overflow:hidden; transition:max-height .3s ease; color:var(--w-60); font-size:14px; line-height:1.75; }
+  .acc.open .a { max-height:400px; padding-bottom:20px; }
+  .quality { border:1px solid var(--mint-20); padding:30px; margin-top:60px; }
+  .quality h3, .nsure h3 { font-family:var(--head); font-size:24px; letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
+  .qc-result { margin-top:16px; font-size:13px; line-height:1.9; display:none; }
+  .qc-result.show { display:block; }
+  .qc-chip { display:inline-block; padding:4px 12px; font-size:11px; letter-spacing:2px; font-weight:700; margin-right:8px; }
+  .qc-good { background:var(--mint); color:#000; }
+  .qc-ok { background:#ffc37a; color:#000; }
+  .qc-bad { background:#ff5a5a; color:#000; }
+  .nsure { border:1px solid rgba(255,255,255,0.1); padding:30px; margin-top:26px; }
+  .estimate { border:1px solid var(--mint-20); background:rgba(63,225,208,0.03); padding:16px 20px; margin-top:20px; font-size:13px; line-height:1.7; color:var(--w-60); }
+  .estimate b { color:var(--mint); }
+  footer { text-align:center; color:var(--w-40); font-size:11px; letter-spacing:2px; padding:50px 20px; }
+  footer a { color:var(--w-60); }
+  @media (max-width:640px){ .frow { grid-template-columns:1fr; } .nav-links { display:none; } }
+  input:focus-visible, button:focus-visible, .pill:focus-visible, .scard:focus-visible { outline:2px solid var(--mint); outline-offset:2px; }
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="../"><img src="../logo.png" alt="Designs by Salz logo"><span>DESIGNS<em>BY</em>SALZ</span></a>
+  <div class="nav-links">
+    <a href="../#work">WORK</a><a href="../#about">ABOUT</a><a href="../schools/">FOR SCHOOLS</a><a href="../#contact">CONTACT</a>
+  </div>
+</nav>
+<main>
+  <section id="hero">
+    <h1>BOOK A <span class="m">PROJECT</span></h1>
+    <p class="sub">Tell me about your athlete, team, event, or creative idea. Complete the form below and I'll review your request, confirm availability, and send you the next steps.</p>
+    <span class="avail"><span class="dot"></span>CURRENTLY ACCEPTING NEW PROJECTS</span>
+    <div class="howto">
+      <div><b>01</b>Choose a service</div>
+      <div><b>02</b>Share your vision</div>
+      <div><b>03</b>Submit your request</div>
+      <div><b>04</b>Receive confirmation</div>
+    </div>
+  </section>
+
+  <div class="prog" id="progWrap">
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    <div class="prog-label"><span id="progText">STEP 1 OF 6 — SERVICES</span><span id="progPct">17%</span></div>
+  </div>
+
+  <form id="bk" novalidate>
+    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+    <!-- STEP 1 -->
+    <div class="step-panel on" data-step="1">
+      <h2>What are we <span style="color:var(--mint)">making?</span></h2>
+      <p class="hint">Pick one or more. You can describe the details in a later step.</p>
+      <div class="cards" id="svcCards" role="group" aria-label="Choose services">
+        <div class="scard" tabindex="0" data-svc="graphics"><div class="ic">▦</div><h3>Sports Graphic Design</h3><p>Game-day, commitment, award, milestone, schedule, or announcement graphics.</p></div>
+        <div class="scard" tabindex="0" data-svc="branding"><div class="ic">◈</div><h3>Athlete Branding</h3><p>A coordinated visual identity and social media package for an athlete.</p></div>
+        <div class="scard" tabindex="0" data-svc="team"><div class="ic">⬡</div><h3>Team or School Package</h3><p>A collection of graphics for a team, school, season, or athletic program.</p></div>
+        <div class="scard" tabindex="0" data-svc="photo"><div class="ic">◉</div><h3>Sports Photography</h3><p>Game coverage, events, portraits, media days, or athlete content.</p></div>
+        <div class="scard" tabindex="0" data-svc="motion"><div class="ic">▶</div><h3>Motion Graphics or Video</h3><p>Animated graphics, short edits, social media videos, or promotional content.</p></div>
+        <div class="scard" tabindex="0" data-svc="custom"><div class="ic">✦</div><h3>Custom Project</h3><p>A unique project that doesn't fit into one of the listed categories.</p></div>
+      </div>
+      <div class="errmsg" id="svcErr">Pick at least one service to continue.</div>
+      <div class="btnrow"><button type="button" class="btn btn-solid" data-next>CONTINUE →</button></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-panel" data-step="2">
+      <h2>Who am I <span style="color:var(--mint)">working with?</span></h2>
+      <p class="hint"><span class="req">*</span> = required. Everything else is optional but helps.</p>
+      <div class="frow">
+        <div><label>Full name <span class="req">*</span></label><input name="name" required autocomplete="name"><div class="errmsg">Your name is required.</div></div>
+        <div><label>Email address <span class="req">*</span></label><input name="email" type="email" required autocomplete="email"><div class="errmsg">Enter a valid email address.</div></div>
+      </div>
+      <div class="frow">
+        <div><label>Phone number <span class="opt">(optional)</span></label><input name="phone" type="tel" autocomplete="tel" placeholder="(555) 555-5555"><div class="errmsg">That phone number doesn't look right.</div></div>
+        <div><label>Preferred contact method</label><select name="contact_method"><option value="Email" selected>Email</option><option>Text</option><option>Call</option><option>Instagram DM</option></select></div>
+      </div>
+      <div class="frow">
+        <div><label>Athlete / team / school / business <span class="opt">(optional)</span></label><input name="org"></div>
+        <div><label>Instagram or social handle <span class="opt">(optional)</span></label><input name="social" placeholder="@yourhandle"></div>
+      </div>
+      <div class="frow">
+        <div><label>City &amp; state <span class="opt">(optional)</span></label><input name="location" placeholder="Millburn, NJ"></div>
+        <div></div>
+      </div>
+      <div class="btnrow"><button type="button" class="btn btn-ghost" data-back>← BACK</button><button type="button" class="btn btn-solid" data-next>CONTINUE →</button></div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-panel" data-step="3">
+      <h2>Project <span style="color:var(--mint)">details</span></h2>
+      <p class="hint">Only the fields relevant to your selected services are shown.</p>
+      <div class="frow">
+        <div><label>Sport <span class="req">*</span></label><input name="sport" required placeholder="Football, baseball, lacrosse…"><div class="errmsg">What sport is this for?</div></div>
+        <div><label>Project title <span class="opt">(optional)</span></label><input name="title" placeholder="e.g. 'Senior Night — #12'"></div>
+      </div>
+      <div class="fgroup"><label>Describe the project <span class="req">*</span></label><textarea name="details" required placeholder="What's the moment? Who's it for? What's the vibe?"></textarea><div class="errmsg">A short description is required.</div><div class="ex">Example: "Commitment graphic for my son — he committed to Rutgers baseball. Bold, red/black, school colors, announcement for Instagram."</div></div>
+      <div class="frow">
+        <div><label>Intended audience <span class="opt">(optional)</span></label><input name="audience" placeholder="Recruiters, fans, family, followers…"></div>
+        <div><label>How many graphics / deliverables?</label><select name="deliverables"><option value="1" selected>1</option><option value="2-3">2–3</option><option value="4-6">4–6</option><option value="7+">7+</option><option value="Season-long">Season-long</option></select></div>
+      </div>
+      <div class="fgroup"><label>Where will this be used?</label>
+        <div class="pills" data-pills="usage">
+          <span class="pill" tabindex="0">Instagram post</span><span class="pill" tabindex="0">Instagram story</span><span class="pill" tabindex="0">X/Twitter</span><span class="pill" tabindex="0">TikTok / Reel cover</span><span class="pill" tabindex="0">Website</span><span class="pill" tabindex="0">Digital display</span><span class="pill" tabindex="0">Printed poster</span><span class="pill" tabindex="0">Banner</span><span class="pill" tabindex="0">Apparel</span><span class="pill" tabindex="0">Other</span>
+        </div>
+      </div>
+      <div class="frow">
+        <div><label>Team colors <span class="opt">(optional)</span></label><input name="colors" placeholder="Navy + gold, hex codes if you have them"></div>
+        <div><label>Preferred dimensions / platform <span class="opt">(optional)</span></label><input name="dimensions" placeholder="1080×1350, 1920×1080, poster size…"></div>
+      </div>
+      <div class="frow">
+        <div><label>Athlete name <span class="opt">(optional)</span></label><input name="athlete"></div>
+        <div><label>Jersey number <span class="opt">(optional)</span></label><input name="jersey" inputmode="numeric"></div>
+      </div>
+      <div class="fgroup"><label>Exact wording that must appear <span class="opt">(optional)</span></label><input name="wording" placeholder="Names, dates, hashtags, sponsor lines…"></div>
+      <div class="frow">
+        <div><label>Inspiration / styles you like <span class="opt">(optional)</span></label><input name="inspo" placeholder="Links or descriptions"></div>
+        <div><label>Styles you do NOT want <span class="opt">(optional)</span></label><input name="avoid"></div>
+      </div>
+
+      <div class="cond" data-cond="photo"><h4>Photography details</h4>
+        <div class="frow">
+          <div><label>Location</label><input name="photo_location" placeholder="Field / gym / venue"></div>
+          <div><label>Event date</label><input name="photo_date" type="date"></div>
+        </div>
+        <div class="frow">
+          <div><label>Start time</label><input name="photo_time" type="time"></div>
+          <div><label>Expected duration</label><input name="photo_duration" placeholder="e.g. 2 hours"></div>
+        </div>
+        <div class="frow"><div><label>Number of athletes</label><input name="photo_athletes" inputmode="numeric"></div><div></div></div>
+      </div>
+      <div class="cond" data-cond="team"><h4>Team / school package details</h4>
+        <div class="frow">
+          <div><label>Season length</label><input name="team_season" placeholder="e.g. Sept–Nov"></div>
+          <div><label>Posting frequency</label><input name="team_freq" placeholder="e.g. every game + results"></div>
+        </div>
+        <div class="frow">
+          <div><label>Number of athletes</label><input name="team_athletes" inputmode="numeric"></div>
+          <div><label>Graphic types needed</label><input name="team_types" placeholder="Gameday, results, seniors…"></div>
+        </div>
+      </div>
+      <div class="cond" data-cond="motion"><h4>Motion / video details</h4>
+        <div class="frow">
+          <div><label>Video length</label><input name="motion_length" placeholder="e.g. 15–30 seconds"></div>
+          <div><label>Format / platform</label><input name="motion_format" placeholder="Reel 9:16, YouTube 16:9…"></div>
+        </div>
+        <div class="frow"><div><label>Music preference</label><input name="motion_music" placeholder="Genre, specific track, or 'you pick'"></div><div></div></div>
+      </div>
+      <div class="btnrow"><button type="button" class="btn btn-ghost" data-back>← BACK</button><button type="button" class="btn btn-solid" data-next>CONTINUE →</button></div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-panel" data-step="4">
+      <h2>Timeline &amp; <span style="color:var(--mint)">budget</span></h2>
+      <div class="frow">
+        <div><label>Desired completion date <span class="opt">(optional)</span></label><input name="deadline" type="date" id="deadlineInput"></div>
+        <div><label>Event / posting date <span class="opt">(optional)</span></label><input name="event_date" type="date"></div>
+      </div>
+      <div class="warn" id="rushWarn">⚡ That's a tight turnaround — rush pricing and availability may apply. I'll confirm whether it's possible before anything is locked in.</div>
+      <div class="fgroup" style="margin-top:22px"><label>Turnaround</label>
+        <div class="pills" data-pills="turnaround" data-single>
+          <span class="pill sel" tabindex="0">Standard</span><span class="pill" tabindex="0">Rush</span><span class="pill" tabindex="0">Not sure</span>
+        </div>
+      </div>
+      <div class="fgroup"><label>Estimated budget range</label>
+        <div class="pills" data-pills="budget" data-single>
+          <span class="pill" tabindex="0">Under $50</span><span class="pill" tabindex="0">$50–$100</span><span class="pill" tabindex="0">$100–$250</span><span class="pill" tabindex="0">$250–$500</span><span class="pill" tabindex="0">$500+</span><span class="pill sel" tabindex="0">Not sure yet</span>
+        </div>
+      </div>
+      <div class="note">Final pricing depends on scope, number of deliverables, turnaround time, and complexity. Submitting a date or budget doesn't lock anything in — I'll confirm availability and a firm quote with you directly.</div>
+      <div class="estimate" id="scopeBox"></div>
+      <div class="btnrow"><button type="button" class="btn btn-ghost" data-back>← BACK</button><button type="button" class="btn btn-solid" data-next>CONTINUE →</button></div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step-panel" data-step="5">
+      <h2>Photos &amp; <span style="color:var(--mint)">files</span></h2>
+      <p class="hint">Athlete photos, team logos, sponsor logos, brand guidelines, references, rosters — anything that helps. Images, PDFs, and docs accepted.</p>
+      <div class="dropzone" id="dz" tabindex="0" role="button" aria-label="Upload files">
+        <p><b>Drag &amp; drop files here</b> or click to browse<br><span style="font-size:11px;color:var(--w-40)">JPG, PNG, HEIC, PDF, DOC — up to 8&nbsp;MB total attached (bigger? use a link below)</span></p>
+        <input type="file" id="fileInput" name="attachments" multiple accept="image/*,.pdf,.doc,.docx" hidden>
+      </div>
+      <div class="flist" id="flist"></div>
+      <div class="errmsg" id="fileErr"></div>
+      <div class="fgroup" style="margin-top:22px"><label>Or paste a link <span class="opt">(Google Drive, Dropbox, iCloud, WeTransfer)</span></label><input name="files_link" type="url" placeholder="https://drive.google.com/…"><div class="ex">For lots of photos or big files, a Drive/Dropbox link is the best way — make sure link sharing is on.</div></div>
+      <div class="btnrow"><button type="button" class="btn btn-ghost" data-back>← BACK</button><button type="button" class="btn btn-solid" data-next>REVIEW MY REQUEST →</button></div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step-panel" data-step="6">
+      <h2>Review &amp; <span style="color:var(--mint)">submit</span></h2>
+      <p class="hint">Look it over — you can jump back and edit any section.</p>
+      <div class="rev" id="review"></div>
+      <div class="checks">
+        <label><input type="checkbox" id="ck1"><span>I have permission to use the photos and logos I'm submitting.</span></label>
+        <label><input type="checkbox" id="ck2"><span>The information I provided is accurate.</span></label>
+        <label><input type="checkbox" id="ck3"><span>I understand that submitting this request doesn't guarantee availability until the project is confirmed.</span></label>
+      </div>
+      <div class="errmsg" id="ckErr">Please confirm all three checkboxes.</div>
+      <div class="btnrow"><button type="button" class="btn btn-ghost" data-back>← BACK</button><button type="submit" class="btn btn-solid" id="submitBtn">SUBMIT PROJECT REQUEST</button></div>
+    </div>
+  </form>
+
+  <!-- CONFIRMATION -->
+  <div id="confirm">
+    <div class="big">YOUR REQUEST<br>IS <span style="color:var(--mint)">IN.</span></div>
+    <p class="sub" style="margin-inline:auto">Thank you for reaching out to Designs by Salz. I'll review your project details and contact you with availability, pricing, and next steps.</p>
+    <div class="ref" id="confRef"></div>
+    <div class="summ" id="confSumm"></div>
+    <div class="btnrow" style="justify-content:center">
+      <a class="btn btn-ghost" href="../">RETURN HOME</a>
+      <a class="btn btn-ghost" href="../#work">VIEW THE PORTFOLIO</a>
+      <button class="btn btn-solid" onclick="location.href='./'">START ANOTHER REQUEST</button>
+    </div>
+  </div>
+
+  <!-- PHOTO QUALITY CHECKER -->
+  <div class="quality">
+    <h3>Photo Quality <span style="color:var(--mint)">Checker</span></h3>
+    <p class="hint" style="margin-bottom:16px">Not sure if your photo is good enough for a graphic? Test it here — nothing is uploaded, it's checked right on your device.</p>
+    <input type="file" id="qcInput" accept="image/*">
+    <div class="qc-result" id="qcResult"></div>
+  </div>
+
+  <!-- PHOTO GUIDE -->
+  <div class="faq">
+    <h2 style="margin-bottom:6px">How to send <span style="color:var(--mint)">great photos</span></h2>
+    <p class="hint">Better source photos = better graphics. The quick rules:</p>
+    <div class="acc"><button type="button" class="q">Send the original file, not a screenshot</button><div class="a"><p>Screenshots and re-saved photos lose quality fast. Send the photo straight from the camera roll, or use a Drive/Dropbox link — never text → screenshot → crop.</p></div></div>
+    <div class="acc"><button type="button" class="q">Bigger is always better</button><div class="a"><p>Aim for photos at least ~1500px on the short side. Zoomed-in crops of far-away action shots usually don't hold up once the background is cut out.</p></div></div>
+    <div class="acc"><button type="button" class="q">Good light beats good poses</button><div class="a"><p>Daylight or bright gym lighting works great. Dark, blurry night shots limit what's possible. If you can, send 3–5 options and I'll pick the strongest.</p></div></div>
+    <div class="acc"><button type="button" class="q">Full body in frame helps</button><div class="a"><p>For cutout-style graphics, the whole athlete (head to cleats) should be in the shot with nothing important cropped off.</p></div></div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq">
+    <h2 style="margin-bottom:16px">FAQ</h2>
+    <div class="acc"><button type="button" class="q">How long does a project normally take?</button><div class="a"><p>It depends on scope and my current queue — most single graphics move quickly, larger packages take longer. Share your date in the form and I'll confirm what's realistic before we start.</p></div></div>
+    <div class="acc"><button type="button" class="q">What files should I send?</button><div class="a"><p>Original, full-resolution athlete photos, plus any logos (PNG with transparency is ideal), team colors, and exact wording. A Drive or Dropbox link works best for large batches.</p></div></div>
+    <div class="acc"><button type="button" class="q">Can I request revisions?</button><div class="a"><p>Yes — tell me what to adjust and I'll work with you to get it right. We'll agree on the details when the project is confirmed.</p></div></div>
+    <div class="acc"><button type="button" class="q">Do you work with clients outside New Jersey?</button><div class="a"><p>Absolutely — design and motion work is fully remote, so location doesn't matter. Photography depends on distance; include your location in the form and we'll figure it out.</p></div></div>
+    <div class="acc"><button type="button" class="q">Can you handle rush projects?</button><div class="a"><p>Often, yes — but rush availability isn't guaranteed and may affect pricing. Flag your deadline in the form and I'll tell you straight away whether it's doable.</p></div></div>
+    <div class="acc"><button type="button" class="q">When is payment due?</button><div class="a"><p>Payment details are confirmed with you directly once the project scope is agreed — before work begins, so there are no surprises.</p></div></div>
+    <div class="acc"><button type="button" class="q">What happens after I submit the form?</button><div class="a"><p>I review your request, check availability, and reply using your preferred contact method with pricing and next steps. Nothing is booked until we've confirmed together.</p></div></div>
+  </div>
+
+  <div class="nsure">
+    <h3>Not sure what to <span style="color:var(--mint)">book?</span></h3>
+    <p class="hint" style="margin:0">Describe your idea under "Custom Project," and I'll help determine the best service and next steps.</p>
+  </div>
+</main>
+<footer>
+  <div class="led-h" style="margin-bottom:30px"></div>
+  © 2026 DESIGNS BY SALZ · <a href="../">HOME</a> · <a href="../schools/">FOR SCHOOLS</a> · <a href="mailto:jsalz3120@gmail.com">EMAIL</a>
+</footer>
+
+<script>
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const form = $('#bk');
+const STEPS = 6;
+let step = 1;
+const state = { services: [], usage: [], turnaround: 'Standard', budget: 'Not sure yet' };
+let files = [];
+let dirty = false;
+const SKEY = 'dbs_booking';
+
+/* ---------- restore saved progress ---------- */
+try {
+  const saved = JSON.parse(sessionStorage.getItem(SKEY) || 'null');
+  if (saved) {
+    Object.assign(state, saved.state || {});
+    for (const [k, v] of Object.entries(saved.fields || {})) { const el = form.elements[k]; if (el && el.type !== 'file') el.value = v; }
+  }
+} catch {}
+
+function persist() {
+  const fields = {};
+  [...form.elements].forEach(el => { if (el.name && el.type !== 'file' && el.type !== 'checkbox') fields[el.name] = el.value; });
+  sessionStorage.setItem(SKEY, JSON.stringify({ state, fields }));
+}
+form.addEventListener('input', () => { dirty = true; persist(); });
+addEventListener('beforeunload', e => { if (dirty && !submitted) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ---------- steps ---------- */
+const NAMES = ['SERVICES','CONTACT','DETAILS','TIMELINE','FILES','REVIEW'];
+function go(n) {
+  step = Math.min(STEPS, Math.max(1, n));
+  $$('.step-panel').forEach(p => p.classList.toggle('on', +p.dataset.step === step));
+  $('#progFill').style.width = (step / STEPS * 100) + '%';
+  $('#progText').textContent = `STEP ${step} OF ${STEPS} — ${NAMES[step-1]}`;
+  $('#progPct').textContent = Math.round(step / STEPS * 100) + '%';
+  if (step === 4) scopeSummary();
+  if (step === 6) buildReview();
+  $('#progWrap').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-next]')) { if (validateStep(step)) go(step + 1); }
+  if (e.target.closest('[data-back]')) go(step - 1);
+});
+
+/* ---------- service cards ---------- */
+$('#svcCards').addEventListener('click', e => { const c = e.target.closest('.scard'); if (c) toggleSvc(c); });
+$('#svcCards').addEventListener('keydown', e => { const c = e.target.closest('.scard'); if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggleSvc(c); } });
+function toggleSvc(c) {
+  c.classList.toggle('sel');
+  state.services = $$('.scard.sel').map(x => x.dataset.svc);
+  syncConds(); persist(); dirty = true;
+}
+function syncConds() {
+  $$('.cond').forEach(d => d.classList.toggle('on', state.services.includes(d.dataset.cond)));
+  $$('.scard').forEach(c => c.classList.toggle('sel', state.services.includes(c.dataset.svc)));
+}
+/* preselect via ?service= */
+const qs = new URLSearchParams(location.search);
+if (qs.get('service')) { state.services = [...new Set([...state.services, qs.get('service')])]; }
+syncConds();
+
+/* ---------- pills ---------- */
+$$('[data-pills]').forEach(group => {
+  group.addEventListener('click', e => { const p = e.target.closest('.pill'); if (p) pickPill(group, p); });
+  group.addEventListener('keydown', e => { const p = e.target.closest('.pill'); if (p && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pickPill(group, p); } });
+});
+function pickPill(group, p) {
+  const key = group.dataset.pills;
+  if (group.hasAttribute('data-single')) {
+    group.querySelectorAll('.pill').forEach(x => x.classList.remove('sel'));
+    p.classList.add('sel'); state[key] = p.textContent;
+  } else {
+    p.classList.toggle('sel');
+    state[key] = [...group.querySelectorAll('.pill.sel')].map(x => x.textContent);
+  }
+  persist(); dirty = true;
+}
+
+/* ---------- rush warning ---------- */
+$('#deadlineInput').addEventListener('change', () => {
+  const v = $('#deadlineInput').value;
+  const days = v ? (new Date(v) - Date.now()) / 864e5 : 99;
+  $('#rushWarn').classList.toggle('show', days < 7 && days > -1);
+});
+
+/* ---------- scope summary (planning aid, not a quote) ---------- */
+function scopeSummary() {
+  const svc = state.services.map(s => ({graphics:'graphic design',branding:'athlete branding',team:'a team/school package',photo:'photography',motion:'motion/video',custom:'a custom project'})[s]).join(' + ') || 'your project';
+  const del = form.elements['deliverables'].value;
+  $('#scopeBox').innerHTML = `<b>SCOPE CHECK:</b> You're requesting <b>${svc}</b> — ${del} deliverable(s), ${state.turnaround.toLowerCase()} turnaround, budget "${state.budget}". This is a planning summary, not a quote — final pricing comes after I review the details.`;
+}
+
+/* ---------- validation ---------- */
+function setErr(el, on) { el.classList.toggle('err', on); const m = el.parentElement.querySelector('.errmsg'); if (m) m.classList.toggle('show', on); }
+function validateStep(n) {
+  let ok = true;
+  if (n === 1) { const has = state.services.length > 0; $('#svcErr').classList.toggle('show', !has); return has; }
+  if (n === 2) {
+    const name = form.elements['name'], email = form.elements['email'], phone = form.elements['phone'];
+    setErr(name, !name.value.trim()); ok &&= !!name.value.trim();
+    const eOK = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value); setErr(email, !eOK); ok &&= eOK;
+    const pOK = !phone.value || /^[\d\s()+.\-]{7,}$/.test(phone.value); setErr(phone, !pOK); ok &&= pOK;
+  }
+  if (n === 3) {
+    const sport = form.elements['sport'], det = form.elements['details'];
+    setErr(sport, !sport.value.trim()); ok &&= !!sport.value.trim();
+    setErr(det, !det.value.trim()); ok &&= !!det.value.trim();
+  }
+  return ok;
+}
+
+/* ---------- files ---------- */
+const MAXTOTAL = 8 * 1048576, TYPES = /image\/|application\/pdf|word/;
+const dz = $('#dz'), fi = $('#fileInput');
+dz.addEventListener('click', () => fi.click());
+dz.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fi.click(); } });
+['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('drag'); }));
+['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('drag'); }));
+dz.addEventListener('drop', e => addFiles([...e.dataTransfer.files]));
+fi.addEventListener('change', () => addFiles([...fi.files]));
+function addFiles(list) {
+  const err = $('#fileErr'); err.classList.remove('show');
+  for (const f of list) {
+    if (!TYPES.test(f.type) && !/\.(heic|docx?)$/i.test(f.name)) { err.textContent = `"${f.name}" isn't a supported type.`; err.classList.add('show'); continue; }
+    if (files.reduce((s, x) => s + x.size, 0) + f.size > MAXTOTAL) { err.textContent = 'Attachment limit reached (8 MB total) — paste a Drive/Dropbox link below for the rest.'; err.classList.add('show'); break; }
+    files.push(f);
+  }
+  renderFiles(); dirty = true;
+}
+function renderFiles() {
+  const el = $('#flist'); el.innerHTML = '';
+  files.forEach((f, i) => {
+    const d = document.createElement('div'); d.className = 'fitem';
+    d.innerHTML = `${f.type.startsWith('image/') ? `<img alt="">` : '📄'}<span>${f.name}</span><span style="color:var(--w-40)">${(f.size/1048576).toFixed(1)} MB</span><button type="button" class="fx" aria-label="Remove ${f.name}">✕</button>`;
+    if (f.type.startsWith('image/')) { const img = d.querySelector('img'); img.src = URL.createObjectURL(f); }
+    d.querySelector('.fx').onclick = () => { files.splice(i, 1); renderFiles(); };
+    el.appendChild(d);
+  });
+}
+
+/* ---------- review ---------- */
+const SVCNAME = {graphics:'Sports Graphic Design',branding:'Athlete Branding',team:'Team or School Package',photo:'Sports Photography',motion:'Motion Graphics or Video',custom:'Custom Project'};
+function val(n) { return (form.elements[n]?.value || '').trim(); }
+function buildReview() {
+  const rows = (pairs) => pairs.filter(([,v]) => v).map(([k,v]) => `<dt>${k}:</dt><dd>${v}</dd>`).join('');
+  $('#review').innerHTML = `
+    <div class="rev-sec"><h4>SELECTED SERVICES <button type="button" data-goto="1">EDIT</button></h4><dl>${state.services.map(s => SVCNAME[s]).join(' · ') || '—'}</dl></div>
+    <div class="rev-sec"><h4>CLIENT INFORMATION <button type="button" data-goto="2">EDIT</button></h4><dl>${rows([['Name',val('name')],['Email',val('email')],['Phone',val('phone')],['Contact via',val('contact_method')],['Org',val('org')],['Social',val('social')],['Location',val('location')]])}</dl></div>
+    <div class="rev-sec"><h4>PROJECT DETAILS <button type="button" data-goto="3">EDIT</button></h4><dl>${rows([['Sport',val('sport')],['Title',val('title')],['Description',val('details').slice(0,140) + (val('details').length>140?'…':'')],['Deliverables',val('deliverables')],['Used on',(state.usage||[]).join(', ')],['Colors',val('colors')],['Athlete',val('athlete')],['Jersey',val('jersey')]])}</dl></div>
+    <div class="rev-sec"><h4>TIMELINE &amp; BUDGET <button type="button" data-goto="4">EDIT</button></h4><dl>${rows([['Deadline',val('deadline')],['Event date',val('event_date')],['Turnaround',state.turnaround],['Budget',state.budget]])}</dl></div>
+    <div class="rev-sec"><h4>FILES &amp; LINKS <button type="button" data-goto="5">EDIT</button></h4><dl>${rows([['Attached',files.length ? files.map(f=>f.name).join(', ') : ''],['Link',val('files_link')]])}${!files.length && !val('files_link') ? 'No files (that\'s okay)' : ''}</dl></div>`;
+  $$('#review [data-goto]').forEach(b => b.onclick = () => go(+b.dataset.goto));
+}
+
+/* ---------- submit ---------- */
+let submitted = false;
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  if (form.elements['_honey'].value) return;
+  const cks = ['#ck1','#ck2','#ck3'].every(s => $(s).checked);
+  $('#ckErr').classList.toggle('show', !cks);
+  if (!cks) return;
+  if (!(validateStep(2) && validateStep(3))) { go(!validateStep(2) ? 2 : 3); return; }
+  const btn = $('#submitBtn'); btn.disabled = true; btn.textContent = 'SENDING…';
+  const ref = 'DBS-' + String(Math.floor(100000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 900000)));
+  const payload = {
+    _subject: `🏈 Booking request ${ref} — ${state.services.map(s=>SVCNAME[s]).join(' + ')}`,
+    _template: 'table',
+    reference: ref,
+    '— CLIENT —': '—', name: val('name'), email: val('email'), phone: val('phone') || '-', contact_via: val('contact_method'), org: val('org') || '-', social: val('social') || '-', location: val('location') || '-',
+    '— SERVICES —': '—', services: state.services.map(s => SVCNAME[s]).join(', '),
+    '— PROJECT —': '—', sport: val('sport'), title: val('title') || '-', description: val('details'), audience: val('audience') || '-', deliverables: val('deliverables'), used_on: (state.usage||[]).join(', ') || '-', dimensions: val('dimensions') || '-', colors: val('colors') || '-', athlete: val('athlete') || '-', jersey: val('jersey') || '-', wording: val('wording') || '-', inspiration: val('inspo') || '-', avoid: val('avoid') || '-',
+    photo_location: val('photo_location') || '-', photo_date: val('photo_date') || '-', photo_time: val('photo_time') || '-', photo_duration: val('photo_duration') || '-', photo_athletes: val('photo_athletes') || '-',
+    team_season: val('team_season') || '-', team_freq: val('team_freq') || '-', team_athletes: val('team_athletes') || '-', team_types: val('team_types') || '-',
+    motion_length: val('motion_length') || '-', motion_format: val('motion_format') || '-', motion_music: val('motion_music') || '-',
+    '— TIMELINE & BUDGET —': '—', deadline: val('deadline') || '-', event_date: val('event_date') || '-', turnaround: state.turnaround, budget: state.budget,
+    '— FILES —': '—', files_link: val('files_link') || '-', attached_files: files.length ? files.map(f => f.name).join(', ') + ' (attached)' : 'none'
+  };
+  try {
+    if (files.length) {
+      const fd = new FormData();
+      Object.entries(payload).forEach(([k, v]) => fd.append(k, v));
+      files.forEach((f, i) => fd.append('attachment' + (i || ''), f, f.name));
+      const r = await fetch('https://formsubmit.co/ajax/jsalz3120@gmail.com', { method: 'POST', headers: { 'Accept': 'application/json' }, body: fd });
+      if (!r.ok) throw 0;
+    } else {
+      const r = await fetch('https://formsubmit.co/ajax/jsalz3120@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) });
+      if (!r.ok) throw 0;
+    }
+    submitted = true; dirty = false; sessionStorage.removeItem(SKEY);
+    $('#confRef').textContent = 'REFERENCE ' + ref;
+    $('#confSumm').innerHTML = `<b>${val('name')}</b><br>${state.services.map(s=>SVCNAME[s]).join(' · ')}<br>Requested deadline: ${val('deadline') || 'flexible'}<br>Confirmation sent to ${val('email')}`;
+    form.style.display = 'none'; $('#progWrap').style.display = 'none'; $('#hero').style.display = 'none';
+    $('#confirm').classList.add('on');
+    scrollTo({ top: 0, behavior: 'auto' });
+  } catch {
+    btn.disabled = false; btn.textContent = 'SUBMIT PROJECT REQUEST';
+    alert('Sending failed — check your connection and try again, or email jsalz3120@gmail.com directly.');
+  }
+});
+
+/* ---------- accordions ---------- */
+$$('.acc .q').forEach(q => q.addEventListener('click', () => q.parentElement.classList.toggle('open')));
+
+/* ---------- photo quality checker (all local, nothing uploaded) ---------- */
+$('#qcInput').addEventListener('change', () => {
+  const f = $('#qcInput').files[0]; if (!f) return;
+  const img = new Image();
+  img.onload = () => {
+    const mp = (img.naturalWidth * img.naturalHeight / 1e6);
+    const short = Math.min(img.naturalWidth, img.naturalHeight);
+    const c = document.createElement('canvas'); const s = 200;
+    c.width = s; c.height = s;
+    const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, s, s);
+    const d = ctx.getImageData(0, 0, s, s).data;
+    let sum = 0, sq = 0, n = s * s;
+    for (let i = 0; i < d.length; i += 4) { const l = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2]; sum += l; sq += l*l; }
+    const mean = sum / n, contrast = Math.sqrt(sq / n - mean * mean);
+    const res = $('#qcResult'); res.classList.add('show');
+    const sizeChip = short >= 1500 ? ['qc-good','GREAT SIZE'] : short >= 900 ? ['qc-ok','USABLE'] : ['qc-bad','TOO SMALL'];
+    const lightChip = mean > 45 && mean < 215 ? ['qc-good','GOOD LIGHT'] : ['qc-ok','CHECK LIGHTING'];
+    const cChip = contrast > 28 ? ['qc-good','SHARP CONTRAST'] : ['qc-ok','FLAT / HAZY'];
+    res.innerHTML = `<span class="qc-chip ${sizeChip[0]}">${sizeChip[1]}</span><span class="qc-chip ${lightChip[0]}">${lightChip[1]}</span><span class="qc-chip ${cChip[0]}">${cChip[1]}</span><br>
+      ${img.naturalWidth}×${img.naturalHeight} — ${mp.toFixed(1)} MP. ${short >= 1500 ? 'This will hold up great in a graphic.' : short >= 900 ? 'Workable, but a higher-res original would be better — send the unedited camera-roll file.' : 'This is likely a screenshot or heavy crop — try to find the original photo.'}`;
+    URL.revokeObjectURL(img.src);
+  };
+  img.src = URL.createObjectURL(f);
+});
+
+go(1);
+</script>
+</body>
+</html>
