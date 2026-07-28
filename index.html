@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
 <title>Designs by Salz — Sports Graphic Designer</title>
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
@@ -909,6 +910,58 @@
     #loader.boot::before, #loader.boot::after, #loader.boot img { animation:none !important; opacity:1; }
   }
 
+  /* ============ V5: PALETTE-DRIVEN + TEXTURE PACK ============ */
+  /* grain + dither noise */
+  .hero::after { content:''; position:absolute; inset:0; pointer-events:none; z-index:3; opacity:.05; mix-blend-mode:overlay; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  /* per-piece hover tint + grainy glow + notched corner */
+  .g-card { clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%); }
+  .g-card::before { background-color: var(--tint, var(--mint)); background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E"); background-blend-mode:overlay; }
+  .g-card:hover { border-color: var(--tint, var(--mint)); box-shadow: 0 0 30px var(--mint-20); box-shadow: 0 0 34px color-mix(in srgb, var(--tint, var(--mint)) 30%, transparent); }
+  .f-img { --tint: var(--mint); }
+  .f-img:hover { border-color: var(--tint); box-shadow: 0 0 44px color-mix(in srgb, var(--tint) 26%, transparent); }
+
+  /* curved type ring around the gem */
+  #gemRing { position:absolute; right:calc(29vw - 45px); top:calc(4% - 45px); width:340px; height:340px; z-index:0; pointer-events:none; opacity:0; transition:opacity 1.2s; animation: ringSpin 46s linear infinite reverse; }
+  #gemRing.on { opacity:.85; }
+  #gemRing text { font-family:var(--body); font-size:12.5px; letter-spacing:5px; fill:var(--mint); opacity:.75; }
+  @keyframes ringSpin { to { transform: rotate(360deg); } }
+  @media (max-width:1100px) { #gemRing { display:none; } }
+
+  /* inverted mint section */
+  .invert { background: var(--mint); color:#000; padding:100px 4vw; position:relative; }
+  .invert::selection, .invert *::selection { background:#000; color:var(--mint); }
+  .invert .tag { display:flex; align-items:center; gap:16px; font-size:12px; letter-spacing:5px; margin-bottom:24px; font-weight:600; }
+  .invert .tag .tick { width:44px; height:2px; background:#000; }
+  .invert h2 { color:#000; font-size:clamp(46px,7.5vw,110px); }
+  .invert p { font-size:16.5px; line-height:1.7; max-width:520px; margin:22px 0 36px; font-weight:500; }
+  .btn-inv { background:#000; color:var(--mint); border:1px solid #000; font-weight:700; }
+  .btn-inv:hover { box-shadow: 0 14px 40px rgba(0,0,0,0.35); transform: translateY(-2px); }
+
+  /* haptic-feel micro-bounces */
+  .btn, .fchip, .pill, .lb-mini, .nav-tool, .tunnel-btn, .scard, .snd, .lb-ctl { transition-property: transform, box-shadow, background, color, border-color; transition-duration: .35s; transition-timing-function: cubic-bezier(.3,1.7,.4,1); }
+  .btn:active, .fchip:active, .pill:active, .lb-mini:active, .nav-tool:active, .tunnel-btn:active, .snd:active, .lb-ctl:active { transform: scale(.94); transition-duration: .06s; }
+
+  /* deck shuffle on featured #1 */
+  .deck .f-img::before, .deck .f-img::after { content:''; position:absolute; inset:0; background:#0b0b0b; border:1px solid rgba(255,255,255,0.07); z-index:-1; }
+  .deck .f-img::before { transform: rotate(2.4deg) translate(10px, 8px); }
+  .deck .f-img::after { transform: rotate(-1.8deg) translate(-9px, 12px); }
+  .deck .f-img { overflow:visible; z-index:1; }
+  .deck .f-img > img { box-shadow: 0 24px 70px rgba(0,0,0,0.85); }
+  .deck-chip { position:absolute; top:12px; left:12px; z-index:5; background:rgba(0,0,0,0.8); border:1px solid var(--mint-45); color:var(--mint); font-size:9.5px; letter-spacing:2.5px; padding:8px 12px; cursor:pointer; backdrop-filter: blur(6px); }
+  .deck-chip:hover { background: var(--mint); color:#000; }
+  .deck .f-img img.swap { animation: deckSwap .45s cubic-bezier(.3,1.4,.4,1); }
+  @keyframes deckSwap { 0% { transform: translateX(46px) rotate(4deg); opacity:0; } 100% { transform:none; opacity:1; } }
+
+  /* chromatic aberration on boot flash */
+  @keyframes crtOpen { 0% { box-shadow: -7px 0 16px rgba(255,45,85,.85), 7px 0 16px rgba(0,145,255,.85); } 100% { transform: scaleX(1) scaleY(140); opacity: 0; box-shadow: -40px 0 80px rgba(255,45,85,0), 40px 0 80px rgba(0,145,255,0); } }
+
+  /* native scroll-driven progress where supported */
+  @supports (animation-timeline: scroll()) {
+    #progressBar { animation: progGrow linear both; animation-timeline: scroll(root); }
+    @keyframes progGrow { from { width: 0%; } to { width: 100%; } }
+  }
+
   /* ============ RESPONSIVE ============ */
   @media (max-width: 1100px) {
     .hero-collage { display: none; }
@@ -940,6 +993,13 @@
     .lb-ctl { width: 42px; height: 42px; font-size: 18px; }
     .lb-prev { left: 10px; } .lb-next { right: 10px; }
   }
+
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: vtOut 0.28s ease forwards; }
+  ::view-transition-new(root) { animation: vtIn 0.3s ease; }
+  @keyframes vtOut { to { opacity: 0; transform: scale(0.985); } }
+  @keyframes vtIn { from { opacity: 0; transform: scale(1.012); } }
+  .brand img, .brand .js-img { view-transition-name: dbs-logo; }
 </style>
 </head>
 <body>
@@ -993,6 +1053,7 @@
     <a class="btn btn-ghost" href="booking/">BOOK A PROJECT</a>
   </div>
   <div id="gem" aria-hidden="true"></div>
+  <div id="gemRing" aria-hidden="true"><svg viewBox="0 0 340 340"><defs><path id="ringPath" d="M170,170 m-138,0 a138,138 0 1,1 276,0 a138,138 0 1,1 -276,0"/></defs><text><textPath href="#ringPath">DESIGNS BY SALZ &#160;•&#160; SPORTS GRAPHIC DESIGNER &#160;•&#160; MILLBURN NJ &#160;•&#160; EST. 2026 &#160;•&#160;</textPath></text></svg></div>
   <div class="hero-collage" id="collage">
     <div class="hc hc1"><img id="hcImg1" alt=""></div>
     <div class="hc hc2"><img id="hcImg2" alt=""></div>
@@ -1126,6 +1187,14 @@
 
 <div style="padding:0 4vw"><div class="led-h"></div></div>
 
+<!-- ================= INVERTED BAND ================= -->
+<section class="invert">
+  <div class="tag"><span class="tick"></span>NO MOMENT TOO BIG</div>
+  <h2>YOUR MOMENT.<br>DESIGNED.</h2>
+  <p>Commitment day. Senior night. The championship run. The moments that matter once — designed like they'll be remembered forever.</p>
+  <a class="btn btn-inv" href="booking/">BOOK A PROJECT →</a>
+</section>
+
 <!-- ================= DESIGN ME DROP + PRINTS + NEWSLETTER ================= -->
 <section id="extras">
   <div style="position:absolute;top:0;left:4vw;right:4vw"><div class="led-h led-delay2"></div></div>
@@ -1236,6 +1305,7 @@
     <span>DESIGNED &amp; BUILT BY JONAH SALZ · MILLBURN, NJ</span>
     <span>HOSTED ON GITHUB PAGES</span>
     <span>LAST UPDATED JULY 2026</span>
+    <span id="studioClock"></span>
     <a href="versions/">V.2026</a>
     <button class="snd" id="sndToggle">SOUND: OFF</button>
   </div>
@@ -1974,7 +2044,7 @@ if (FINE && !RM) {
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank' || a.hasAttribute('download')) return;
     const href = a.getAttribute('href');
     if (!/^(booking|schools|links|course|status|survey|versions)\//.test(href)) return;
-    if (RM) return;
+    if (RM || CSS.supports('view-transition-name: root')) return; /* native View Transitions take over */
     e.preventDefault();
     ov.classList.add('on');
     setTimeout(() => location.href = href, 300);
@@ -2023,14 +2093,17 @@ if (!RM && innerWidth > 1100) setTimeout(() => {
       scene.add(new THREE.AmbientLight(0x223333, 2));
       const key = new THREE.PointLight(0x3fe1d0, 1.6); key.position.set(3, 2, 4); scene.add(key);
       const rim = new THREE.PointLight(0xffffff, 1.1); rim.position.set(-3, -1, 2); scene.add(rim);
-      let mx = 0, my = 0;
+      let mx = 0, my = 0, vel = 0, lastY = scrollY;
       addEventListener('mousemove', e => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
+      addEventListener('scroll', () => { vel = Math.min(2.6, vel + Math.abs(scrollY - lastY) * 0.005); lastY = scrollY; }, { passive: true });
       (function anim() {
-        gem.rotation.y += 0.004; gem.rotation.x = 0.25 + my * 0.35; gem.rotation.z = mx * 0.25;
+        vel *= 0.94;
+        gem.rotation.y += 0.004 + vel * 0.022; gem.rotation.x = 0.25 + my * 0.35; gem.rotation.z = mx * 0.25;
         renderer.render(scene, cam);
         requestAnimationFrame(anim);
       })();
       holder.classList.add('on');
+      document.getElementById('gemRing')?.classList.add('on');
     } catch {}
   };
   document.head.appendChild(s);
@@ -2089,6 +2162,80 @@ if (!RM && innerWidth > 1100) setTimeout(() => {
   }
   document.getElementById('tunnelBtn').addEventListener('click', openT);
   document.getElementById('tunX').addEventListener('click', close);
+})();
+</script>
+<script>
+/* ================= V5: PALETTE-DRIVEN COLOR ================= */
+function bestTint(f) {
+  const p = (typeof PALETTES !== 'undefined' && PALETTES[f]) || [];
+  let best = null, bs = -1;
+  for (const c of p) {
+    const [r, g, b] = c.rgb.split(',').map(Number);
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    const s = mx ? (mx - mn) / mx : 0, v = mx / 255;
+    const score = s * 0.75 + v * 0.35;
+    if (v > 0.16 && score > bs) { bs = score; best = c.hex; }
+  }
+  return best;
+}
+
+/* per-piece hover tints on every card */
+domFor.forEach((el, f) => { const t = bestTint(f); if (t) el.style.setProperty('--tint', t); });
+
+/* palette-glow lightbox backdrop */
+const _s5 = showLB;
+showLB = function() {
+  _s5();
+  const t = bestTint(clickList[idx].f);
+  lb.style.background = t ? `radial-gradient(ellipse at center, ${t}2e 0%, rgba(0,0,0,0.97) 62%)` : 'rgba(0,0,0,0.97)';
+};
+const _c5 = closeLB;
+closeLB = function() { _c5(); lb.style.background = ''; };
+
+/* tunnel spotlights in each artwork's color */
+document.querySelectorAll('#tunTrack .tun-panel').forEach((p, i) => {
+  const a = featured[i]; if (!a) return;
+  const t = bestTint(a.f); if (!t) return;
+  const im = p.querySelector('img');
+  if (im) { im.style.borderColor = t + '66'; im.style.boxShadow = `0 0 60px rgba(0,0,0,.9), 0 0 48px ${t}3d`; }
+  const cap = p.querySelector('.cap'); if (cap) cap.style.color = t;
+});
+
+/* featured deck shuffle */
+(() => {
+  const row = document.querySelector('#featured .feature-row'); if (!row) return;
+  row.classList.add('deck');
+  let cur = 0;
+  const oldFi = row.querySelector('.f-img');
+  const fi = oldFi.cloneNode(true); oldFi.replaceWith(fi);
+  const img = fi.querySelector('img');
+  const chip = document.createElement('button');
+  chip.className = 'deck-chip'; chip.type = 'button'; chip.textContent = '⇄ SHUFFLE THE DECK';
+  chip.setAttribute('aria-label', 'Shuffle featured piece');
+  fi.appendChild(chip);
+  const tEl = row.querySelector('.f-title'), sEl = row.querySelector('.f-sub'), cEl = row.querySelector('.f-cat .chip');
+  const setTint = a => fi.style.setProperty('--tint', bestTint(a.f) || 'var(--mint)');
+  const show = a => {
+    img.classList.remove('swap'); void img.offsetWidth;
+    img.src = prevSrc(a);
+    img.onerror = () => { img.onerror = null; img.src = prevJpg(a); };
+    img.alt = a.t + ' — ' + (a.s || '');
+    if (a.w && a.h) img.style.aspectRatio = a.w + '/' + a.h;
+    tEl.textContent = a.t; sEl.textContent = a.s || '';
+    if (cEl) cEl.textContent = CATNAME[a.c];
+    img.classList.add('swap');
+    setTint(a);
+  };
+  chip.addEventListener('click', e => { e.stopPropagation(); cur = (cur + 1) % featured.length; show(featured[cur]); if (typeof toast === 'function') toast('DECK SHUFFLED — ' + featured[cur].t.toUpperCase().slice(0, 28)); });
+  fi.addEventListener('click', () => openLB(clickList.indexOf(featured[cur])));
+  setTint(featured[0]);
+})();
+
+/* studio clock */
+(() => {
+  const ck = document.getElementById('studioClock'); if (!ck) return;
+  const up = () => ck.textContent = 'MILLBURN, NJ — ' + new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit' });
+  up(); setInterval(up, 15000);
 })();
 </script>
 </body>

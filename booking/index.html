@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#000000">
 <title>Book a Project — Designs by Salz</title>
 <link rel="icon" href="../favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
@@ -144,6 +145,13 @@
   footer a { color:var(--w-60); }
   @media (max-width:640px){ .frow { grid-template-columns:1fr; } .nav-links { display:none; } }
   input:focus-visible, button:focus-visible, .pill:focus-visible, .scard:focus-visible { outline:2px solid var(--mint); outline-offset:2px; }
+
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: vtOut 0.28s ease forwards; }
+  ::view-transition-new(root) { animation: vtIn 0.3s ease; }
+  @keyframes vtOut { to { opacity: 0; transform: scale(0.985); } }
+  @keyframes vtIn { from { opacity: 0; transform: scale(1.012); } }
+  .brand img, .brand .js-img { view-transition-name: dbs-logo; }
 </style>
 </head>
 <body>
